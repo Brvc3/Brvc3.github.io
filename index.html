@@ -158,6 +158,200 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-WP-of-homework-in-Winter-Holiday" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/wuyi000925.github.io/2020/03/10/WP-of-homework-in-Winter-Holiday/">WP of homework in Winter Holiday</a>
+    </h1>
+  
+
+        
+        <a href="/wuyi000925.github.io/2020/03/10/WP-of-homework-in-Winter-Holiday/" class="archive-article-date">
+  	<time datetime="2020-03-10T12:27:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="寒假作业"><a href="#寒假作业" class="headerlink" title="寒假作业"></a>寒假作业</h1><p>记录一下寒假做的题<br>以后看看可能还会有新的收获</p>
+        
+          <a class="article-more-a" href="/wuyi000925.github.io/2020/03/10/WP-of-homework-in-Winter-Holiday/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">WP</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/wuyi000925.github.io/category/Bin//" class="article-tag-list-link color4">Bin</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/wuyi000925.github.io/2020/03/10/WP-of-homework-in-Winter-Holiday/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-在80端口部署多个网站" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/wuyi000925.github.io/2020/03/10/%E5%9C%A880%E7%AB%AF%E5%8F%A3%E9%83%A8%E7%BD%B2%E5%A4%9A%E4%B8%AA%E7%BD%91%E7%AB%99/">在80端口部署多个网站</a>
+    </h1>
+  
+
+        
+        <a href="/wuyi000925.github.io/2020/03/10/%E5%9C%A880%E7%AB%AF%E5%8F%A3%E9%83%A8%E7%BD%B2%E5%A4%9A%E4%B8%AA%E7%BD%91%E7%AB%99/" class="archive-article-date">
+  	<time datetime="2020-03-10T12:24:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前些日子终于部署好了网站但是只有主域名是没问题的，www前缀的网站一直404。后来一想是因为都部署在了同一个端口上。</p>
+<p>刚开始的想法是那我换个端口不就行了吗，结果直接用ipv4地址加端口访问是可以的，但是用域名访问还是不行。原来，访问域名的时候默认访问80端口，那就只能想办法在同一个端口部署多个网站了。方法如下：</p>
+<p>进入文件管理：www/server/nginx/conf/nginx.conf</p>
+<p>添加这么一段：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">server &#123;  </span><br><span class="line">    listen 80;</span><br><span class="line">    server_name aa.bb.cc;  #aa.bb.cc即要添加的域名</span><br><span class="line"></span><br><span class="line">    location &#x2F; &#123;</span><br><span class="line">        proxy_set_header   X-Real-IP $remote_addr;</span><br><span class="line">        proxy_set_header   Host      $http_host;</span><br><span class="line">        proxy_pass         http:&#x2F;&#x2F;0.0.0.0:8080;  #这里放你实际上存放网站的端口</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>就大功告成了。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Server</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/wuyi000925.github.io/category/Web//" class="article-tag-list-link color4">Web</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/wuyi000925.github.io/2020/03/10/%E5%9C%A880%E7%AB%AF%E5%8F%A3%E9%83%A8%E7%BD%B2%E5%A4%9A%E4%B8%AA%E7%BD%91%E7%AB%99/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-在转战hexo-gitee时踩的雷" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -194,7 +388,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">-Tech -Web</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
         		</li>
       		
 		</ul>
@@ -206,7 +404,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/categories/Web//" class="article-tag-list-link color5">-Web</a>
+        			<a href="/wuyi000925.github.io/category/Web//" class="article-tag-list-link color4">Web</a>
         		</li>
       		
 		</ul>
@@ -281,7 +479,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">-Tech -Web</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
         		</li>
       		
 		</ul>
@@ -293,7 +495,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/categories/Web//" class="article-tag-list-link color5">-Web</a>
+        			<a href="/wuyi000925.github.io/category/Web//" class="article-tag-list-link color4">Web</a>
         		</li>
       		
 		</ul>
@@ -502,7 +704,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">-Tech -Web</a>
+                <a href="javascript:void(0)" class="js-tag color5">Tech</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Bin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">WP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Web</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Server</a>
               </li>
             
             <div class="clearfix"></div>
