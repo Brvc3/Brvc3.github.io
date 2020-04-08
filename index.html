@@ -158,6 +158,110 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Matlab-Note-0x01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/wuyi000925.github.io/2020/04/08/Matlab-Note-0x01/">Matlab Note 0x01</a>
+    </h1>
+  
+
+        
+        <a href="/wuyi000925.github.io/2020/04/08/Matlab-Note-0x01/" class="archive-article-date">
+  	<time datetime="2020-04-08T11:23:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-hold-on-amp-hold-off"><a href="#1-hold-on-amp-hold-off" class="headerlink" title="1.hold on &amp;hold off"></a>1.hold on &amp;hold off</h2><p>看了Matlab教程中关于hold on &amp;hold off的内容，有点迷糊，故查阅CSDN</p>
+<blockquote>
+<p>hold on是当前轴及图像保持而不被刷新，准备接受此后将绘制的图形，多图共存，即启动图形保持功能，当前坐标轴和图形都将保持，从此绘制的图形都将添加在这个图形的基础上，并自动调整坐标轴的范围。</p>
+<p>hold off使当前轴及图像不再具备被刷新的性质，新图出现时，取消原图。即关闭图形保持功能。</p>
+<p>hold on 和hold off，是相对使用的<br>前者的意思是，你在当前图的轴（坐标系）中画了一幅图，再画另一幅图时，原来的图还在，与新图共存，都看得到<br>后者表达的是，你在当前图的轴（坐标系）中画了一幅图，此时，状态是hold off,则再画另一幅图时，原来的图就看不到了，在轴上绘制的是新图，原图被替换了</p>
+</blockquote>
+<p>即 Matlab中绘图，默认为“新画一张图时，先抹去原有图”。hold on使得原有图片保存下来，新旧图片共存。hold off则取消改状态，下次绘图时会抹去原有图片。</p>
+<h2 id="2-surf函数-amp-mesh函数"><a href="#2-surf函数-amp-mesh函数" class="headerlink" title="2.surf函数&amp;mesh函数"></a>2.surf函数&amp;mesh函数</h2><p>surf 函数及其伴随函数 mesh 以三维形式显示曲面图。</p>
+<p>surf 使用颜色显示曲面图的连接线和面。</p>
+<p>mesh 生成仅以颜色标记连接定义点的线条的线框曲面图。 </p>
+<h2 id="3-子图（subplot函数）"><a href="#3-子图（subplot函数）" class="headerlink" title="3.子图（subplot函数）"></a>3.子图（subplot函数）</h2><!--词缀sub+词根plot-->
+
+<p>官方示例中的<code>[X,Y,Z] = cylinder(4*cos(t))；</code></p>
+<p>cylinder(x):绘制以x为半径的圆柱体</p>
+<p>实例中x为4*cos(t)所以图形如示例所示</p>
+<p>XYZ三张子图是以X,Y,Z为底绘制的三维图</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">matlab</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">math</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/wuyi000925.github.io/category/matlab//" class="article-tag-list-link color2">matlab</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/wuyi000925.github.io/2020/04/08/Matlab-Note-0x01/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Python-dict" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -984,19 +1088,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vim</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Tech</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Web</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">matlab</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">math</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">vim</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1008,19 +1120,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Bin</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Reverse</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Server</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Bin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">WP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Reverse</a>
               </li>
             
             <div class="clearfix"></div>
