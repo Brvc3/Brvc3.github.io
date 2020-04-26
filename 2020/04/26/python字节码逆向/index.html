@@ -6,16 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://twzx.gitee.io/wuyi000925.github.io">
-  <title>Archives: 2020/3 | Lanyuexuan</title>
+  <title>python字节码逆向 | Lanyuexuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="A blog recording my study path.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Lanyuexuan">
-<meta property="og:url" content="http://twzx.gitee.io/wuyi000925.github.io/archives/2020/03/index.html">
+  <meta name="description" content="校历第9周作业disasm拿到的是一段字节码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python字节码逆向">
+<meta property="og:url" content="http://twzx.gitee.io/wuyi000925.github.io/2020/04/26/python%E5%AD%97%E8%8A%82%E7%A0%81%E9%80%86%E5%90%91/index.html">
 <meta property="og:site_name" content="Lanyuexuan">
-<meta property="og:description" content="A blog recording my study path.">
+<meta property="og:description" content="校历第9周作业disasm拿到的是一段字节码">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-04-26T09:37:31.000Z">
+<meta property="article:modified_time" content="2020-04-26T09:39:30.032Z">
 <meta property="article:author" content="Wu">
+<meta property="article:tag" content="Tech">
+<meta property="article:tag" content="Bin">
+<meta property="article:tag" content="Reverse">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="Lanyuexuan" type="application/atom+xml">
@@ -156,89 +161,47 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-python字节码逆向" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/wuyi000925.github.io/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/17/Python-dict/" class="archive-article-date">
-  	<time datetime="2020-03-17T00:24:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-17</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/17/Python-dict/">Python dict()</a>
+    <h1 class="article-title" itemprop="name">
+      python字节码逆向
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">script</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/python//" class="article-tag-list-link color2">python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/11/%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%87%BA%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2020-03-11T12:51:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-11</time>
+        
+        <a href="/wuyi000925.github.io/2020/04/26/python%E5%AD%97%E8%8A%82%E7%A0%81%E9%80%86%E5%90%91/" class="archive-article-date">
+  	<time datetime="2020-04-26T09:37:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-26</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/11/%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%87%BA%E9%A2%98/">第一次出题</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="校历第9周作业"><a href="#校历第9周作业" class="headerlink" title="校历第9周作业"></a>校历第9周作业</h1><h2 id="disasm"><a href="#disasm" class="headerlink" title="disasm"></a>disasm</h2><p>拿到的是一段字节码</p>
+<a id="more"></a>
 
-        <div class="article-info info-on-right">
-          
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br></pre></td><td class="code"><pre><span class="line"># Python 2.7</span><br><span class="line"># Embedded file name: game.py</span><br><span class="line"></span><br><span class="line">   1       0  LOAD_CONST               249</span><br><span class="line">           3  LOAD_CONST               91</span><br><span class="line">           6  LOAD_CONST               149</span><br><span class="line">           9  LOAD_CONST               113</span><br><span class="line">          12  LOAD_CONST               16</span><br><span class="line">          15  LOAD_CONST               91</span><br><span class="line">          18  LOAD_CONST               53</span><br><span class="line">          21  LOAD_CONST               41</span><br><span class="line">          24  BUILD_LIST_8          8</span><br><span class="line">          27  STORE_NAME            0  &#39;arr0&#39;			arr0&#x3D;[249, 91, 149, 112, 16, 91, 53, 41]</span><br><span class="line"></span><br><span class="line">   2      30  LOAD_CONST               43</span><br><span class="line">          33  LOAD_CONST               1</span><br><span class="line">          36  LOAD_CONST               6</span><br><span class="line">          39  LOAD_CONST               69</span><br><span class="line">          42  LOAD_CONST               20</span><br><span class="line">          45  LOAD_CONST               62</span><br><span class="line">          48  LOAD_CONST               6</span><br><span class="line">          51  LOAD_CONST               44</span><br><span class="line">          54  LOAD_CONST               24</span><br><span class="line">          57  LOAD_CONST               113</span><br><span class="line">          60  LOAD_CONST               6</span><br><span class="line">          63  LOAD_CONST               35</span><br><span class="line">          66  LOAD_CONST               0</span><br><span class="line">          69  LOAD_CONST               3</span><br><span class="line">          72  LOAD_CONST               6</span><br><span class="line">          75  LOAD_CONST               44</span><br><span class="line">          78  LOAD_CONST               20</span><br><span class="line">          81  LOAD_CONST               22</span><br><span class="line">          84  LOAD_CONST               127</span><br><span class="line">          87  LOAD_CONST               60</span><br><span class="line">          90  BUILD_LIST_20        20</span><br><span class="line">          93  STORE_NAME            1  &#39;arr1&#39;           arr1&#x3D;[43, 1, 6, 69, 20, 62, 6, 44, 24, 113, 6, 35, 0, 3, 6, 44, 20, 22, 127, 60]</span><br><span class="line"></span><br><span class="line">   3      96  LOAD_CONST               90</span><br><span class="line">          99  LOAD_CONST               100</span><br><span class="line">         102  LOAD_CONST               87</span><br><span class="line">         105  LOAD_CONST               109</span><br><span class="line">         108  LOAD_CONST               86</span><br><span class="line">         111  LOAD_CONST               108</span><br><span class="line">         114  LOAD_CONST               86</span><br><span class="line">         117  LOAD_CONST               105</span><br><span class="line">         120  LOAD_CONST               90</span><br><span class="line">         123  LOAD_CONST               104</span><br><span class="line">         126  LOAD_CONST               88</span><br><span class="line">         129  LOAD_CONST               102</span><br><span class="line">         132  BUILD_LIST_12        12</span><br><span class="line">         135  STORE_NAME            2  &#39;arr2&#39;			arr2&#x3D;[90, 100, 87, 109, 86, 108, 86, 105, 90, 104, 88, 102]</span><br><span class="line"></span><br><span class="line">   5     138  LOAD_CODE                &lt;code_object check0&gt;</span><br><span class="line">         141  MAKE_FUNCTION_0       0  None</span><br><span class="line">         144  STORE_NAME            3  &#39;check0&#39;				define a function called &#39;check0&#39;</span><br><span class="line"></span><br><span class="line">   8     147  LOAD_CODE                &lt;code_object check1&gt;</span><br><span class="line">         150  MAKE_FUNCTION_0       0  None</span><br><span class="line">         153  STORE_NAME            4  &#39;check1&#39;</span><br><span class="line"></span><br><span class="line">  14     156  LOAD_CODE                &lt;code_object check2&gt;</span><br><span class="line">         159  MAKE_FUNCTION_0       0  None</span><br><span class="line">         162  STORE_NAME            5  &#39;check2&#39;</span><br><span class="line"></span><br><span class="line">  20     165  LOAD_CODE                &lt;code_object check3&gt;</span><br><span class="line">         168  MAKE_FUNCTION_0       0  None</span><br><span class="line">         171  STORE_NAME            6  &#39;check3&#39;</span><br><span class="line"></span><br><span class="line">  37     174  LOAD_NAME             7  &#39;raw_input&#39;</span><br><span class="line">         177  CALL_FUNCTION_0       0  None</span><br><span class="line">         180  STORE_NAME            8  &#39;flag&#39;</span><br><span class="line"></span><br><span class="line">  38     183  LOAD_NAME             3  &#39;check0&#39;</span><br><span class="line">         186  LOAD_NAME             8  &#39;flag&#39;</span><br><span class="line">         189  CALL_FUNCTION_1       1  None</span><br><span class="line">         192  POP_JUMP_IF_FALSE   239  &#39;to 239&#39;</span><br><span class="line">         195  LOAD_NAME             4  &#39;check1&#39;</span><br><span class="line">         198  LOAD_NAME             8  &#39;flag&#39;</span><br><span class="line">         201  CALL_FUNCTION_1       1  None</span><br><span class="line">         204  POP_JUMP_IF_FALSE   239  &#39;to 239&#39;</span><br><span class="line">         207  LOAD_NAME             5  &#39;check2&#39;</span><br><span class="line">         210  LOAD_NAME             8  &#39;flag&#39;</span><br><span class="line">         213  CALL_FUNCTION_1       1  None</span><br><span class="line">         216  POP_JUMP_IF_FALSE   239  &#39;to 239&#39;</span><br><span class="line">         219  LOAD_NAME             6  &#39;check3&#39;</span><br><span class="line">         222  LOAD_NAME             8  &#39;flag&#39;</span><br><span class="line">         225  CALL_FUNCTION_1       1  None</span><br><span class="line">       228_0  COME_FROM           216  &#39;216&#39;</span><br><span class="line">       228_1  COME_FROM           204  &#39;204&#39;</span><br><span class="line">       228_2  COME_FROM           192  &#39;192&#39;</span><br><span class="line">         228  POP_JUMP_IF_FALSE   239  &#39;to 239&#39;</span><br><span class="line"></span><br><span class="line">  39     231  LOAD_CONST               &#39;ok&#39;</span><br><span class="line">         234  PRINT_ITEM</span><br><span class="line">         235  PRINT_NEWLINE_CONT</span><br><span class="line">         236  JUMP_FORWARD          5  &#39;to 244&#39;</span><br><span class="line"></span><br><span class="line">  41     239  LOAD_CONST               &#39;no&#39;</span><br><span class="line">         242  PRINT_ITEM</span><br><span class="line">         243  PRINT_NEWLINE_CONT</span><br><span class="line">       244_0  COME_FROM           236  &#39;236&#39;</span><br><span class="line">         244  LOAD_CONST               None</span><br><span class="line">         247  RETURN_VALUE</span><br><span class="line"></span><br><span class="line"># check0 line 5 of game.py</span><br><span class="line"></span><br><span class="line">   6       0  LOAD_GLOBAL           0  &#39;all&#39;</span><br><span class="line">           3  LOAD_GENEXPR             &#39;&lt;code_object &lt;genexpr&gt;&gt;&#39;</span><br><span class="line">           6  MAKE_FUNCTION_0       0  None</span><br><span class="line">           9  LOAD_FAST             0  &#39;s&#39;</span><br><span class="line">          12  GET_ITER</span><br><span class="line">          13  CALL_FUNCTION_1       1  None</span><br><span class="line">          16  CALL_FUNCTION_1       1  None</span><br><span class="line">          19  RETURN_VALUE</span><br><span class="line"></span><br><span class="line"># check1 line 8 of game.py</span><br><span class="line"></span><br><span class="line">   9       0  LOAD_GLOBAL           0  &#39;len&#39;</span><br><span class="line">           3  LOAD_FAST             0  &#39;s&#39;</span><br><span class="line">           6  CALL_FUNCTION_1       1  None</span><br><span class="line">           9  LOAD_CONST               100</span><br><span class="line">          12  COMPARE_OP            0  &lt;</span><br><span class="line">          15  POP_JUMP_IF_FALSE    58  &#39;to 58&#39;</span><br><span class="line">          18  LOAD_GLOBAL           0  &#39;len&#39;</span><br><span class="line">          21  LOAD_FAST             0  &#39;s&#39;</span><br><span class="line">          24  CALL_FUNCTION_1       1  None</span><br><span class="line">          27  LOAD_GLOBAL           0  &#39;len&#39;</span><br><span class="line">          30  LOAD_FAST             0  &#39;s&#39;</span><br><span class="line">          33  CALL_FUNCTION_1       1  None</span><br><span class="line">          36  BINARY_MULTIPLY</span><br><span class="line">          37  LOAD_CONST               777</span><br><span class="line">          40  BINARY_MODULO</span><br><span class="line">          41  LOAD_CONST               233</span><br><span class="line">          44  BINARY_XOR</span><br><span class="line">          45  LOAD_CONST               513</span><br><span class="line">          48  COMPARE_OP            2  &#x3D;&#x3D;</span><br><span class="line">        51_0  COME_FROM            15  &#39;15&#39;</span><br><span class="line">          51  POP_JUMP_IF_FALSE    58  &#39;to 58&#39;</span><br><span class="line"></span><br><span class="line">  10      54  LOAD_GLOBAL           1  &#39;True&#39;</span><br><span class="line">          57  RETURN_END_IF</span><br><span class="line">        58_0  COME_FROM            51  &#39;51&#39;</span><br><span class="line"></span><br><span class="line">  12      58  LOAD_GLOBAL           2  &#39;False&#39;</span><br><span class="line">          61  RETURN_VALUE</span><br><span class="line">          62  LOAD_CONST               None</span><br><span class="line">          65  RETURN_VALUE</span><br><span class="line"></span><br><span class="line"># check2 line 14 of game.py</span><br><span class="line"></span><br><span class="line">  15       0  LOAD_GLOBAL           0  &#39;ord&#39;</span><br><span class="line">           3  LOAD_FAST             0  &#39;s&#39;</span><br><span class="line">           6  LOAD_CONST               0</span><br><span class="line">           9  BINARY_SUBSCR</span><br><span class="line">          10  CALL_FUNCTION_1       1  None</span><br><span class="line">          13  LOAD_CONST               128</span><br><span class="line">          16  BINARY_MULTIPLY</span><br><span class="line">          17  LOAD_GLOBAL           0  &#39;ord&#39;</span><br><span class="line">          20  LOAD_FAST             0  &#39;s&#39;</span><br><span class="line">          23  LOAD_CONST               1</span><br><span class="line">          26  BINARY_SUBSCR</span><br><span class="line">          27  CALL_FUNCTION_1       1  None</span><br><span class="line">          30  BINARY_ADD</span><br><span class="line">          31  LOAD_CONST               128</span><br><span class="line">          34  BINARY_MULTIPLY</span><br><span class="line">          35  LOAD_GLOBAL           0  &#39;ord&#39;</span><br><span class="line">          38  LOAD_FAST             0  &#39;s&#39;</span><br><span class="line">          41  LOAD_CONST               2</span><br><span class="line">          44  BINARY_SUBSCR</span><br><span class="line">          45  CALL_FUNCTION_1       1  None</span><br><span class="line">          48  BINARY_ADD</span><br><span class="line">          49  LOAD_CONST               128</span><br><span class="line">          52  BINARY_MULTIPLY</span><br><span class="line">          53  LOAD_GLOBAL           0  &#39;ord&#39;</span><br><span class="line">          56  LOAD_FAST             0  &#39;s&#39;</span><br><span class="line">          59  LOAD_CONST               3</span><br><span class="line">          62  BINARY_SUBSCR</span><br><span class="line">          63  CALL_FUNCTION_1       1  None</span><br><span class="line">          66  BINARY_ADD</span><br><span class="line">          67  LOAD_CONST               128</span><br><span class="line">          70  BINARY_MULTIPLY</span><br><span class="line">          71  LOAD_GLOBAL           0  &#39;ord&#39;</span><br><span class="line">          74  LOAD_FAST             0  &#39;s&#39;</span><br><span class="line">          77  LOAD_CONST               4</span><br><span class="line">          80  BINARY_SUBSCR</span><br><span class="line">          81  CALL_FUNCTION_1       1  None</span><br><span class="line">          84  BINARY_ADD</span><br><span class="line">          85  LOAD_CONST               128</span><br><span class="line">          88  BINARY_MULTIPLY</span><br><span class="line">          89  LOAD_GLOBAL           0  &#39;ord&#39;</span><br><span class="line">          92  LOAD_FAST             0  &#39;s&#39;</span><br><span class="line">          95  LOAD_CONST               5</span><br><span class="line">          98  BINARY_SUBSCR</span><br><span class="line">          99  CALL_FUNCTION_1       1  None</span><br><span class="line">         102  BINARY_ADD</span><br><span class="line">         103  LOAD_CONST               3533889469877L</span><br><span class="line">         106  COMPARE_OP            2  &#x3D;&#x3D;</span><br><span class="line">         109  POP_JUMP_IF_FALSE   138  &#39;to 138&#39;</span><br><span class="line">         112  LOAD_GLOBAL           0  &#39;ord&#39;</span><br><span class="line">         115  LOAD_FAST             0  &#39;s&#39;</span><br><span class="line">         118  LOAD_CONST               -1</span><br><span class="line">         121  BINARY_SUBSCR</span><br><span class="line">         122  CALL_FUNCTION_1       1  None</span><br><span class="line">         125  LOAD_CONST               125</span><br><span class="line">         128  COMPARE_OP            2  &#x3D;&#x3D;</span><br><span class="line">       131_0  COME_FROM           109  &#39;109&#39;</span><br><span class="line">         131  POP_JUMP_IF_FALSE   138  &#39;to 138&#39;</span><br><span class="line"></span><br><span class="line">  16     134  LOAD_GLOBAL           1  &#39;True&#39;</span><br><span class="line">         137  RETURN_END_IF</span><br><span class="line">       138_0  COME_FROM           131  &#39;131&#39;</span><br><span class="line"></span><br><span class="line">  18     138  LOAD_GLOBAL           2  &#39;False&#39;</span><br><span class="line">         141  RETURN_VALUE</span><br><span class="line">         142  LOAD_CONST               None</span><br><span class="line">         145  RETURN_VALUE</span><br><span class="line"></span><br><span class="line"># check3 line 20 of game.py</span><br><span class="line"></span><br><span class="line">  21       0  LOAD_GLOBAL           0  &#39;map&#39;</span><br><span class="line">           3  LOAD_GLOBAL           1  &#39;ord&#39;</span><br><span class="line">           6  LOAD_FAST             0  &#39;s&#39;</span><br><span class="line">           9  CALL_FUNCTION_2       2  None</span><br><span class="line">          12  STORE_FAST            1  &#39;arr&#39;</span><br><span class="line"></span><br><span class="line">  22      15  LOAD_FAST             1  &#39;arr&#39;</span><br><span class="line">          18  LOAD_CONST               6</span><br><span class="line">          21  LOAD_CONST               30</span><br><span class="line">          24  LOAD_CONST               3</span><br><span class="line">          27  BUILD_SLICE_3         3</span><br><span class="line">          30  BINARY_SUBSCR</span><br><span class="line">          31  STORE_FAST            2  &#39;a&#39;</span><br><span class="line"></span><br><span class="line">  23      34  SETUP_LOOP           62  &#39;to 99&#39;</span><br><span class="line">          37  LOAD_GLOBAL           2  &#39;range&#39;</span><br><span class="line">          40  LOAD_GLOBAL           3  &#39;len&#39;</span><br><span class="line">          43  LOAD_FAST             2  &#39;a&#39;</span><br><span class="line">          46  CALL_FUNCTION_1       1  None</span><br><span class="line">          49  CALL_FUNCTION_1       1  None</span><br><span class="line">          52  GET_ITER</span><br><span class="line">          53  FOR_ITER             42  &#39;to 98&#39;</span><br><span class="line">          56  STORE_FAST            3  &#39;i&#39;</span><br><span class="line"></span><br><span class="line">  24      59  LOAD_FAST             2  &#39;a&#39;</span><br><span class="line">          62  LOAD_FAST             3  &#39;i&#39;</span><br><span class="line">          65  BINARY_SUBSCR</span><br><span class="line">          66  LOAD_CONST               17684</span><br><span class="line">          69  BINARY_MULTIPLY</span><br><span class="line">          70  LOAD_CONST               372511</span><br><span class="line">          73  BINARY_ADD</span><br><span class="line">          74  LOAD_CONST               257</span><br><span class="line">          77  BINARY_MODULO</span><br><span class="line">          78  LOAD_GLOBAL           4  &#39;arr0&#39;</span><br><span class="line">          81  LOAD_FAST             3  &#39;i&#39;</span><br><span class="line">          84  BINARY_SUBSCR</span><br><span class="line">          85  COMPARE_OP            3  !&#x3D;</span><br><span class="line">          88  POP_JUMP_IF_FALSE    53  &#39;to 53&#39;</span><br><span class="line"></span><br><span class="line">  25      91  LOAD_GLOBAL           5  &#39;False&#39;</span><br><span class="line">          94  RETURN_END_IF</span><br><span class="line">        95_0  COME_FROM            88  &#39;88&#39;</span><br><span class="line">          95  JUMP_BACK            53  &#39;to 53&#39;</span><br><span class="line">          98  POP_BLOCK</span><br><span class="line">        99_0  COME_FROM            34  &#39;34&#39;</span><br><span class="line"></span><br><span class="line">  26      99  LOAD_FAST             1  &#39;arr&#39;</span><br><span class="line">         102  LOAD_CONST               -2</span><br><span class="line">         105  LOAD_CONST               33</span><br><span class="line">         108  LOAD_CONST               -1</span><br><span class="line">         111  BUILD_SLICE_3         3</span><br><span class="line">         114  BINARY_SUBSCR</span><br><span class="line">         115  LOAD_CONST               5</span><br><span class="line">         118  BINARY_MULTIPLY</span><br><span class="line">         119  STORE_FAST            4  &#39;b&#39;</span><br><span class="line"></span><br><span class="line">  27     122  LOAD_GLOBAL           0  &#39;map&#39;</span><br><span class="line">         125  LOAD_LAMBDA              &#39;&lt;code_object &lt;lambda&gt;&gt;&#39;</span><br><span class="line">         128  MAKE_FUNCTION_0       0  None</span><br><span class="line">         131  LOAD_GLOBAL           6  &#39;zip&#39;</span><br><span class="line">         134  LOAD_FAST             4  &#39;b&#39;</span><br><span class="line">         137  LOAD_FAST             1  &#39;arr&#39;</span><br><span class="line">         140  LOAD_CONST               7</span><br><span class="line">         143  LOAD_CONST               27</span><br><span class="line">         146  SLICE+3</span><br><span class="line">         147  CALL_FUNCTION_2       2  None</span><br><span class="line">         150  CALL_FUNCTION_2       2  None</span><br><span class="line">         153  STORE_FAST            5  &#39;c&#39;</span><br><span class="line"></span><br><span class="line">  28     156  LOAD_FAST             5  &#39;c&#39;</span><br><span class="line">         159  LOAD_GLOBAL           7  &#39;arr1&#39;</span><br><span class="line">         162  COMPARE_OP            3  !&#x3D;</span><br><span class="line">         165  POP_JUMP_IF_FALSE   172  &#39;to 172&#39;</span><br><span class="line"></span><br><span class="line">  29     168  LOAD_GLOBAL           5  &#39;False&#39;</span><br><span class="line">         171  RETURN_END_IF</span><br><span class="line">       172_0  COME_FROM           165  &#39;165&#39;</span><br><span class="line"></span><br><span class="line">  30     172  LOAD_CONST               0</span><br><span class="line">         175  STORE_FAST            6  &#39;p&#39;</span><br><span class="line"></span><br><span class="line">  31     178  SETUP_LOOP          105  &#39;to 286&#39;</span><br><span class="line">         181  LOAD_GLOBAL           2  &#39;range&#39;</span><br><span class="line">         184  LOAD_CONST               28</span><br><span class="line">         187  LOAD_CONST               34</span><br><span class="line">         190  CALL_FUNCTION_2       2  None</span><br><span class="line">         193  GET_ITER</span><br><span class="line">         194  FOR_ITER             88  &#39;to 285&#39;</span><br><span class="line">         197  STORE_FAST            3  &#39;i&#39;</span><br><span class="line"></span><br><span class="line">  32     200  LOAD_FAST             1  &#39;arr&#39;</span><br><span class="line">         203  LOAD_FAST             3  &#39;i&#39;</span><br><span class="line">         206  BINARY_SUBSCR</span><br><span class="line">         207  LOAD_CONST               107</span><br><span class="line">         210  BINARY_ADD</span><br><span class="line">         211  LOAD_CONST               16</span><br><span class="line">         214  BINARY_DIVIDE</span><br><span class="line">         215  LOAD_CONST               77</span><br><span class="line">         218  BINARY_ADD</span><br><span class="line">         219  LOAD_GLOBAL           8  &#39;arr2&#39;</span><br><span class="line">         222  LOAD_FAST             6  &#39;p&#39;</span><br><span class="line">         225  BINARY_SUBSCR</span><br><span class="line">         226  COMPARE_OP            3  !&#x3D;</span><br><span class="line">         229  POP_JUMP_IF_TRUE    268  &#39;to 268&#39;</span><br><span class="line">         232  LOAD_FAST             1  &#39;arr&#39;</span><br><span class="line">         235  LOAD_FAST             3  &#39;i&#39;</span><br><span class="line">         238  BINARY_SUBSCR</span><br><span class="line">         239  LOAD_CONST               117</span><br><span class="line">         242  BINARY_ADD</span><br><span class="line">         243  LOAD_CONST               16</span><br><span class="line">         246  BINARY_MODULO</span><br><span class="line">         247  LOAD_CONST               99</span><br><span class="line">         250  BINARY_ADD</span><br><span class="line">         251  LOAD_GLOBAL           8  &#39;arr2&#39;</span><br><span class="line">         254  LOAD_FAST             6  &#39;p&#39;</span><br><span class="line">         257  LOAD_CONST               1</span><br><span class="line">         260  BINARY_ADD</span><br><span class="line">         261  BINARY_SUBSCR</span><br><span class="line">         262  COMPARE_OP            3  !&#x3D;</span><br><span class="line">       265_0  COME_FROM           229  &#39;229&#39;</span><br><span class="line">         265  POP_JUMP_IF_FALSE   272  &#39;to 272&#39;</span><br><span class="line"></span><br><span class="line">  33     268  LOAD_GLOBAL           9  &#39;false&#39;</span><br><span class="line">         271  RETURN_END_IF</span><br><span class="line">       272_0  COME_FROM           265  &#39;265&#39;</span><br><span class="line"></span><br><span class="line">  34     272  LOAD_FAST             6  &#39;p&#39;</span><br><span class="line">         275  LOAD_CONST               2</span><br><span class="line">         278  INPLACE_ADD</span><br><span class="line">         279  STORE_FAST            6  &#39;p&#39;</span><br><span class="line">         282  JUMP_BACK           194  &#39;to 194&#39;</span><br><span class="line">         285  POP_BLOCK</span><br><span class="line">       286_0  COME_FROM           178  &#39;178&#39;</span><br><span class="line"></span><br><span class="line">  35     286  LOAD_GLOBAL          10  &#39;True&#39;</span><br><span class="line">         289  RETURN_VALUE</span><br><span class="line"></span><br><span class="line"># &lt;genexpr&gt; line 6 of game.py</span><br><span class="line"></span><br><span class="line">   6       0  LOAD_FAST             0  &#39;.0&#39;</span><br><span class="line">           3  FOR_ITER             32  &#39;to 38&#39;</span><br><span class="line">           6  STORE_FAST            1  &#39;x&#39;</span><br><span class="line">           9  LOAD_GLOBAL           0  &#39;ord&#39;</span><br><span class="line">          12  LOAD_FAST             1  &#39;x&#39;</span><br><span class="line">          15  CALL_FUNCTION_1       1  None</span><br><span class="line">          18  LOAD_GLOBAL           1  &#39;range&#39;</span><br><span class="line">          21  LOAD_CONST               32</span><br><span class="line">          24  LOAD_CONST               128</span><br><span class="line">          27  CALL_FUNCTION_2       2  None</span><br><span class="line">          30  COMPARE_OP            6  in</span><br><span class="line">          33  YIELD_VALUE</span><br><span class="line">          34  POP_TOP</span><br><span class="line">          35  JUMP_BACK             3  &#39;to 3&#39;</span><br><span class="line">          38  LOAD_CONST               None</span><br><span class="line">          41  RETURN_VALUE</span><br><span class="line"></span><br><span class="line"># &lt;lambda&gt; line 27 of game.py</span><br><span class="line"></span><br><span class="line">  27       0  LOAD_FAST             0  &#39;x&#39;</span><br><span class="line">           3  LOAD_CONST               0</span><br><span class="line">           6  BINARY_SUBSCR</span><br><span class="line">           7  LOAD_FAST             0  &#39;x&#39;</span><br><span class="line">          10  LOAD_CONST               1</span><br><span class="line">          13  BINARY_SUBSCR</span><br><span class="line">          14  BINARY_XOR</span><br><span class="line">          15  RETURN_VALUE</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">LOAD_CONST加载const变量，比如数值、字符串等等，一般用于传给函数的参数.</span></span><br><span class="line"><span class="string">BUILD_LIST_xx &amp; STORE_NAME 根据英文意思理解就好</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line">arr0 = [<span class="number">249</span>, <span class="number">91</span>, <span class="number">149</span>, <span class="number">112</span>, <span class="number">16</span>, <span class="number">91</span>, <span class="number">53</span>, <span class="number">41</span>]</span><br><span class="line">arr1 = [<span class="number">43</span>, <span class="number">1</span>, <span class="number">6</span>, <span class="number">69</span>, <span class="number">20</span>, <span class="number">62</span>, <span class="number">6</span>, <span class="number">44</span>, <span class="number">24</span>, <span class="number">113</span>, <span class="number">6</span>, <span class="number">35</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">44</span>, <span class="number">20</span>, <span class="number">22</span>, <span class="number">127</span>, <span class="number">60</span>]</span><br><span class="line">arr2 = [<span class="number">90</span>, <span class="number">100</span>, <span class="number">87</span>, <span class="number">109</span>, <span class="number">86</span>, <span class="number">108</span>, <span class="number">86</span>, <span class="number">105</span>, <span class="number">90</span>, <span class="number">104</span>, <span class="number">88</span>, <span class="number">102</span>]</span><br><span class="line"></span><br><span class="line">flag = raw_input()</span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">声明了check0~check3 4个判断函数对flag判断，一个一个分析</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">check0: 只有LOAD_FAST,没有STORE_FAST,s为形参</span></span><br><span class="line"><span class="string">	    调用了genexpr，查看genexpr</span></span><br><span class="line"><span class="string">	    有一个迭代，检测s中元素x是否符合ord(x)&gt;=32 and ord(x)&lt;128</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">check1: BINARY_MULTIPLY()</span></span><br><span class="line"><span class="string">			Implements TOS = TOS1 * TOS.</span></span><br><span class="line"><span class="string">		BINARY_MODULO()</span></span><br><span class="line"><span class="string">			Implements TOS = TOS1 % TOS.</span></span><br><span class="line"><span class="string">		BINARY_XOR()</span></span><br><span class="line"><span class="string">			Implements TOS = TOS1 ^ TOS.</span></span><br><span class="line"><span class="string">		先检测len(s)是否&lt;100</span></span><br><span class="line"><span class="string">		然后对len(s)操作</span></span><br><span class="line"><span class="string">		判断len(s)*len(s)%777^233==513,第一个符合该条件的整数len(s)是39</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">check2: BINARY_SUBSCR()</span></span><br><span class="line"><span class="string">			Implements TOS = TOS1[TOS].</span></span><br><span class="line"><span class="string">		检查flag[0]到flag[5]是否符合格式，这里已知格式是flag&#123;，则第flag[5]=5</span></span><br><span class="line"><span class="string">		检查flag[-1]是否为&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">check3: 核心检测代码</span></span><br><span class="line"><span class="string">		map(ord,s) #转化为ASCII码</span></span><br><span class="line"><span class="string">		BUILD_SLICE(argc)</span></span><br><span class="line"><span class="string">			Pushes a slice object on the stack. argc must be 2 or 3. </span></span><br><span class="line"><span class="string">			If it is 2, slice(TOS1, TOS) is pushed; </span></span><br><span class="line"><span class="string">			if it is 3, slice(TOS2, TOS1, TOS) is pushed.</span></span><br><span class="line"><span class="string">			See the slice() built-in function for more information.</span></span><br><span class="line"><span class="string">			将切片对象压入栈。这里是3类型，将flag[6:30:3] [6, 9, 12, 15, 18, 21, 24, 27]入栈，</span></span><br><span class="line"><span class="string">			记作a，进行校对</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line">a=flag[<span class="number">6</span>:<span class="number">30</span>:<span class="number">3</span>]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(a)):  <span class="comment">#len(a)==8</span></span><br><span class="line">	a[i] *= <span class="number">17684</span></span><br><span class="line">	a[i] += <span class="number">372511</span></span><br><span class="line">	a[i] %= <span class="number">257</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">	检测a[i] == arr0[i]</span></span><br><span class="line"><span class="string">	接下来是flag[-2:33:-1],即flag中第37, 36, 35, 34号元素，再*5(长度变为20).记为b</span></span><br><span class="line"><span class="string">	lambda是将x[0],x[1]异或</span></span><br><span class="line"><span class="string">	因为</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line">c = map(<span class="keyword">lambda</span>(),zip(b,flag[<span class="number">7</span>:<span class="number">27</span>]))</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">	检测c==arr1</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">	p = 0</span></span><br><span class="line"><span class="string">	for i in range(28,34):</span></span><br><span class="line"><span class="string">		(flag[i]+107)//16+77 == arr2[p]</span></span><br><span class="line"><span class="string">		(flag[i]+117)%16+99 == arr2[p+1]</span></span><br><span class="line"><span class="string">		p+=2</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+
+<p>写脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">arr0 = [<span class="number">249</span>, <span class="number">91</span>, <span class="number">149</span>, <span class="number">112</span>, <span class="number">16</span>, <span class="number">91</span>, <span class="number">53</span>, <span class="number">41</span>]</span><br><span class="line">arr1 = [<span class="number">43</span>, <span class="number">1</span>, <span class="number">6</span>, <span class="number">69</span>, <span class="number">20</span>, <span class="number">62</span>, <span class="number">6</span>, <span class="number">44</span>, <span class="number">24</span>, <span class="number">113</span>, <span class="number">6</span>, <span class="number">35</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">44</span>, <span class="number">20</span>, <span class="number">22</span>, <span class="number">127</span>, <span class="number">60</span>]</span><br><span class="line">arr2 = [<span class="number">90</span>, <span class="number">100</span>, <span class="number">87</span>, <span class="number">109</span>, <span class="number">86</span>, <span class="number">108</span>, <span class="number">86</span>, <span class="number">105</span>, <span class="number">90</span>, <span class="number">104</span>, <span class="number">88</span>, <span class="number">102</span>]</span><br><span class="line"></span><br><span class="line">flag = [<span class="number">0</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">39</span>)]</span><br><span class="line">flag[<span class="number">0</span>:<span class="number">6</span>] = <span class="string">'flag&#123;5'</span></span><br><span class="line">flag[<span class="number">-1</span>] = <span class="string">'&#125;'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">8</span>):</span><br><span class="line">	<span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">32</span>,<span class="number">128</span>):<span class="comment">#爆破 </span></span><br><span class="line">		temp = j</span><br><span class="line">		j *= <span class="number">17684</span></span><br><span class="line">		j += <span class="number">372511</span></span><br><span class="line">		j %= <span class="number">257</span></span><br><span class="line">		<span class="keyword">if</span> j == arr0[i] :</span><br><span class="line">			flag[<span class="number">6</span>+i*<span class="number">3</span>] = temp</span><br><span class="line"></span><br><span class="line">temp = [<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>]</span><br><span class="line">temp[<span class="number">0</span>] = arr1 [<span class="number">8</span>] ^ flag[<span class="number">15</span>]</span><br><span class="line">temp[<span class="number">1</span>] = arr1 [<span class="number">17</span>] ^ flag[<span class="number">24</span>]</span><br><span class="line">temp[<span class="number">2</span>] = arr1 [<span class="number">14</span>] ^ flag[<span class="number">21</span>]</span><br><span class="line">temp[<span class="number">3</span>] = arr1 [<span class="number">11</span>] ^ flag[<span class="number">18</span>]</span><br><span class="line">flag[<span class="number">37</span>] = temp[<span class="number">0</span>]</span><br><span class="line">flag[<span class="number">36</span>] = temp[<span class="number">1</span>]</span><br><span class="line">flag[<span class="number">35</span>] = temp[<span class="number">2</span>]</span><br><span class="line">flag[<span class="number">34</span>] = temp[<span class="number">3</span>]</span><br><span class="line">b = temp*<span class="number">5</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">20</span>):</span><br><span class="line">	flag[i+<span class="number">7</span>] = arr1[i] ^ b[i]</span><br><span class="line"></span><br><span class="line">p = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">28</span>,<span class="number">34</span>):</span><br><span class="line">	<span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">32</span>,<span class="number">128</span>):</span><br><span class="line">		<span class="keyword">if</span> (j+<span class="number">107</span>)//<span class="number">16</span>+<span class="number">77</span>==arr2[p] <span class="keyword">and</span> (j+<span class="number">117</span>)%<span class="number">16</span>+<span class="number">99</span> == arr2[p+<span class="number">1</span>]:</span><br><span class="line">			flag[i] = j</span><br><span class="line">			p+=<span class="number">2</span></span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">7</span>,<span class="number">37</span>):</span><br><span class="line">	<span class="comment">#print(flag[i],end=' ')</span></span><br><span class="line">	print(chr(flag[i]),end=<span class="string">''</span>)</span><br></pre></td></tr></table></figure>
+
+<p>flag{5MG50rx5Y~75VfE5YrPLIKl541pNu3F}</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -258,7 +221,7 @@
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -271,317 +234,104 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://twzx.gitee.io/wuyi000925.github.io/2020/04/26/python%E5%AD%97%E8%8A%82%E7%A0%81%E9%80%86%E5%90%91/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/11/First-time-to-use-vim/" class="archive-article-date">
-  	<time datetime="2020-03-11T12:50:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-11</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/wuyi000925.github.io/2020/04/26/%E6%A0%A1%E5%8E%86%E7%AC%AC8%E5%91%A8%E4%BD%9C%E4%B8%9A/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">校历第8周作业</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/11/First-time-to-use-vim/">First time to use vim</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vim</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/linux//" class="article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/10/WP-of-homework-in-Winter-Holiday/" class="archive-article-date">
-  	<time datetime="2020-03-10T12:27:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/10/WP-of-homework-in-Winter-Holiday/">WP of homework in Winter Holiday</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">WP</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Bin//" class="article-tag-list-link color4">Bin</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/10/%E5%9C%A880%E7%AB%AF%E5%8F%A3%E9%83%A8%E7%BD%B2%E5%A4%9A%E4%B8%AA%E7%BD%91%E7%AB%99/" class="archive-article-date">
-  	<time datetime="2020-03-10T12:24:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/10/%E5%9C%A880%E7%AB%AF%E5%8F%A3%E9%83%A8%E7%BD%B2%E5%A4%9A%E4%B8%AA%E7%BD%91%E7%AB%99/">在80端口部署多个网站</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Server</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Web//" class="article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/09/%E5%9C%A8%E8%BD%AC%E6%88%98hexo-gitee%E6%97%B6%E8%B8%A9%E7%9A%84%E9%9B%B7/" class="archive-article-date">
-  	<time datetime="2020-03-09T14:06:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/09/%E5%9C%A8%E8%BD%AC%E6%88%98hexo-gitee%E6%97%B6%E8%B8%A9%E7%9A%84%E9%9B%B7/">在转战hexo+gitee时踩的雷</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Web//" class="article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/09/Establish-a-Website-for-the-first-time/" class="archive-article-date">
-  	<time datetime="2020-03-09T13:27:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/09/Establish-a-Website-for-the-first-time/">Establish a Website for the first time</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Web//" class="article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/09/hello-world/" class="archive-article-date">
-  	<time datetime="2020-03-09T12:02:17.204Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/09/hello-world/">Hello World</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -606,8 +356,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
