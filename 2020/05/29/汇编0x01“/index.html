@@ -6,15 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://twzx.gitee.io/wuyi000925.github.io">
-  <title>Archives: 2020 | Lanyuexuan</title>
+  <title>汇编0x01 | Lanyuexuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="A blog recording my study path.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Lanyuexuan">
-<meta property="og:url" content="http://twzx.gitee.io/wuyi000925.github.io/archives/2020/page/2/index.html">
+  <meta name="description" content="汇编 0x01寻址模式 立即数寻址         eg.: mov eax,1000h    操作数在指令中  寄存器寻址         eg. :mov ebp,esp        操作数在指定寄存器中  直接内存寻址     eg.: mov ax,[2000h]    操作数在内存中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="汇编0x01">
+<meta property="og:url" content="http://twzx.gitee.io/wuyi000925.github.io/2020/05/29/%E6%B1%87%E7%BC%960x01%E2%80%9C/index.html">
 <meta property="og:site_name" content="Lanyuexuan">
-<meta property="og:description" content="A blog recording my study path.">
+<meta property="og:description" content="汇编 0x01寻址模式 立即数寻址         eg.: mov eax,1000h    操作数在指令中  寄存器寻址         eg. :mov ebp,esp        操作数在指定寄存器中  直接内存寻址     eg.: mov ax,[2000h]    操作数在内存中">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-05-29T12:41:17.000Z">
+<meta property="article:modified_time" content="2020-05-29T12:46:00.825Z">
 <meta property="article:author" content="Wu">
 <meta name="twitter:card" content="summary">
   
@@ -154,325 +156,250 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-汇编0x01“" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      汇编0x01
+    </h1>
+  
+
+        
+        <a href="/wuyi000925.github.io/2020/05/29/%E6%B1%87%E7%BC%960x01%E2%80%9C/" class="archive-article-date">
+  	<time datetime="2020-05-29T12:41:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-29</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="汇编-0x01"><a href="#汇编-0x01" class="headerlink" title="汇编 0x01"></a>汇编 0x01</h1><h2 id="寻址模式"><a href="#寻址模式" class="headerlink" title="寻址模式"></a>寻址模式</h2><ol>
+<li><p>立即数寻址         eg.: mov eax,1000h    操作数在指令中</p>
+</li>
+<li><p>寄存器寻址         eg. :mov ebp,esp        操作数在指定寄存器中</p>
+</li>
+<li><p>直接内存寻址     eg.: mov ax,[2000h]    操作数在内存中</p>
+<a id="more"></a>
+</li>
+<li><p>寄存器间接寻址 eg.: mov eax,[ebx]       操作数在内存中，操作数的地址在寄存器中</p>
+</li>
+<li><p>索引寻址             eg.: mov ax,[di+100h] 通过基址寄存器内容加上一个索引值来寻址内存中的数据</p>
+</li>
+<li><p>相对基址索引寻址eg.: mov dh,[bx+si+10h]  基址寄存器+变址寄存器内容+偏移量</p>
+</li>
+<li><p>比例寻址变址      eg.: mov eax,[ebx+4*ecx]</p>
+</li>
+</ol>
+<h2 id="CPU寄存器的种类"><a href="#CPU寄存器的种类" class="headerlink" title="CPU寄存器的种类"></a>CPU寄存器的种类</h2><p><strong>1.一般寄存器:AX、BX、CX、DX</strong></p>
+<p>AX:累加寄存器，BX:基址寄存器，CX:計數寄存器，DX:数据寄存器</p>
+<p><strong>2.索引寄存器:SI、DI</strong></p>
+<p>SI:來源索引寄存器，DI:目的索引寄存器</p>
+<!--more-->
+
+<p><strong>3.堆栈、基址寄存器:SP、BP</strong></p>
+<p>SP:堆栈指標寄存器，BP:基底指標寄存器</p>
+<p><strong>4.指位/指標寄存器(指位器):IP</strong></p>
+<p><strong>5.段寄存器:CS、DS、ES、SS</strong></p>
+<p>代码段 CS：如 IP 所執行地址都是CS代码段的內容</p>
+<p>数据段 DS：如 mov ax,[bx] 間接寻址法所指都是数据段的数据</p>
+<p>附加段 ES：如 mov ax,es:[di] 利用間接寻址法取其他區段存储器数据時</p>
+<p>堆栈段 SS：如 SP 堆栈数据，都是指在堆栈段的</p>
+<p><strong>6.标志寄存器:FLAG</strong></p>
+<p><strong>7.386以上電腦新增擴充之寄存器</strong></p>
+<p>EAX、ECX、EDX、EBX：為ax,bx,cx,dx的扩展，各為32位</p>
+<p>ESI、EDI、ESP、EBP：為si,di,sp,bp的扩展，32位</p>
+<p>EFLAG、EIP：為FLAG與IP之扩展，32位</p>
+<p>FS、GS：新增的段寄存器 </p>
+<p><strong>当参数少于7个时， 参数从左到右放入寄存器: rdi, rsi, rdx, rcx, r8, r9</strong></p>
+<p>16位下：</p>
+<p><strong>BYTE PTR 一个字节，8位</strong></p>
+<p><strong>WORF PTR 两个字节，16位</strong></p>
+<h1 id="call-ret-retf-leave指令"><a href="#call-ret-retf-leave指令" class="headerlink" title="call ret retf leave指令"></a>call ret retf leave指令</h1><p><strong>ret指令</strong></p>
+<p>CPU执行ret指令时，进行下面两步操作：</p>
+<p>（1）（IP）=（(ss)*16 + (sp)）</p>
+<p>（2）（sp）= (sp) + 2</p>
+<p>​           <strong>相当于    pop IP</strong></p>
+<p><strong>retf指令</strong></p>
+<p>CPU执行ret指令时，进行下面两步操作：</p>
+<p>（1）（IP）=（(ss)*16 + (sp)）</p>
+<p>（2）（sp）= (sp) + 2</p>
+<p>（3）（CS）=（(ss)*16 + (sp)）</p>
+<p>（4）（sp）= (sp) + 2</p>
+<p>   <strong>相当于pop IP</strong></p>
+<p>​              <strong>pop CS</strong></p>
+<p><strong>call指令</strong></p>
+<p>当执行call指令时，进行两步操作：<br>1）将当前的IP或CS和IP压入栈中<br>2）转移</p>
+<p>call指令不能实现短转移，它的书写格式同jmp指令</p>
+<p>依据标号进行转移的call指令<br>语法格式：call 标号<br>汇编解释：(1) push IP (2) jmp near ptr 标号</p>
+<p>依据目的地址在指令中的call指令<br>语法格式：call far ptr 标号<br>汇编解释：(1) push CS (2) push IP (3) jmp far ptr 标号</p>
+<p>转移地址在寄存器中的call指令<br>语法格式：call 16位reg<br>汇编解释：(1) push IP (2) jmp 16位reg</p>
+<p>转移地址在内存中的call指令<br>语法格式一：call word ptr 内存单元地址<br>汇编解释一：(1) push IP (2) jmp word ptr 内存单元地址</p>
+<p>语法格式二：call dword ptr 内存单元地址<br>汇编解释二：(1) push CS (2) push IP (3) jmp dword ptr 内存单元地址</p>
+<p><strong>leave指令</strong></p>
+<p>在16位汇编下相当于:<br>mov sp,bp<br>pop bp</p>
+<p>在32位汇编下相当于:<br>mov esp,ebp;   //将ebp指向（ebp内部应当保存一个地址，所谓指向即这个地址对应的空间）的值赋给esp<br>pop ebp</p>
+<h1 id="JMP指令"><a href="#JMP指令" class="headerlink" title="JMP指令"></a>JMP指令</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">jmp short 标号</span><br><span class="line">jmp near ptr 标号</span><br><span class="line">jmp far ptr 标号</span><br><span class="line">jmp <span class="number">16</span>位reg</span><br><span class="line">jmp word ptr  内存单元地址</span><br><span class="line">jmp dword ptr 内存单元地址</span><br></pre></td></tr></table></figure>
+
+<p><strong>jmp short 标号</strong></p>
+<ul>
+<li>段内短转移</li>
+<li>对<strong>IP</strong>的修改范围是<strong>-128~127</strong> </li>
+<li><strong>向前</strong> 移动时可以最多越过128个字节，<strong>向后</strong> 移动可以最多越过127个字节</li>
+<li>依据位移进行转移，转移指令结束后，<strong>CS:IP</strong>指向标号处的指令</li>
+<li>(IP)=(IP)+8位位移</li>
+</ul>
+<p>8位位移 = 要跳转去的标号地址 - 减去jmp指令后第一条指令的起始地址<br>8位位移的范围是：-128~127<br>8位位移使用 补码 形式表示</p>
+<p> <strong>jmp near ptr 标号</strong></p>
+<ul>
+<li>段内近转移</li>
+<li>(IP)=(IP)+16位位移</li>
+</ul>
+<p>16位位移 = 要跳转去的标号地址 - 减去jmp指令后第一条指令的起始地址<br>16位位移的范围是：-32768~32767<br>16位位移使用 补码 形式表示</p>
+<p><strong>jmp far ptr 标号</strong></p>
+<ul>
+<li>段间转移，远转移</li>
+<li>用标号所在段地址和偏移地址修改CS和IP</li>
+</ul>
+<p><strong>jmp 16位reg</strong></p>
+<ul>
+<li><code>jmp 某一合法寄存器</code> : 用寄存器中的值修改<strong>IP</strong>寄存器中的值</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">jmp ax </span><br><span class="line">指令执行前 ax&#x3D;1000H CS&#x3D;2000H IP&#x3D;0003H</span><br><span class="line">指令执行后 ax&#x3D;1000H CS&#x3D;2000H IP&#x3D;1000H</span><br><span class="line">IP寄存器中的值被修改成和ax一样的了</span><br></pre></td></tr></table></figure>
+
+<p><strong>jmp word ptr  内存单元地址</strong></p>
+<ul>
+<li>段内转移，只修改偏移地址</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mov ax,0123H</span><br><span class="line">mov [bx],ax</span><br><span class="line">jmp word ptr [bx]</span><br><span class="line">执行后 (IP)&#x3D;0123H</span><br></pre></td></tr></table></figure>
+
+<p><strong>jmp dword ptr 内存单元地址</strong></p>
+<ul>
+<li>段间转移</li>
+<li>高地址放目的段地址，低地址放目的偏移地址</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mov ax,0123H</span><br><span class="line">mov [bx],ax</span><br><span class="line">mov word ptr [bx+2],0</span><br><span class="line">jmp dword ptr [bx]</span><br><span class="line">执行后 (CS)&#x3D;0, (IP)&#x3D;0123H,</span><br><span class="line">CS:IP 指向 0000:0123H</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/wuyi000925.github.io/archives/2020" class="archive-year">2020</a>
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/11/First-time-to-use-vim/" class="archive-article-date">
-  	<time datetime="2020-03-11T12:50:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/11/First-time-to-use-vim/">First time to use vim</a>
-    </h1>
-  
+      </div>
+    </span>
+  </div>
+</div>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vim</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://twzx.gitee.io/wuyi000925.github.io/2020/05/29/%E6%B1%87%E7%BC%960x01%E2%80%9C/" alt="微信分享二维码">
+    </div>
+</div>
 
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/linux//" class="article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/10/WP-of-homework-in-Winter-Holiday/" class="archive-article-date">
-  	<time datetime="2020-03-10T12:27:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-10</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/wuyi000925.github.io/2020/05/29/pwn0x01-%E6%A0%88%E6%BA%A2%E5%87%BA/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          pwn0x01-栈溢出
+        
+      </div>
+    </a>
+  
+  
+    <a href="/wuyi000925.github.io/2020/05/18/bs64-encode-decode/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">bs64 encode&amp;decode</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/10/WP-of-homework-in-Winter-Holiday/">WP of homework in Winter Holiday</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">WP</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Bin//" class="article-tag-list-link color4">Bin</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/10/%E5%9C%A880%E7%AB%AF%E5%8F%A3%E9%83%A8%E7%BD%B2%E5%A4%9A%E4%B8%AA%E7%BD%91%E7%AB%99/" class="archive-article-date">
-  	<time datetime="2020-03-10T12:24:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/10/%E5%9C%A880%E7%AB%AF%E5%8F%A3%E9%83%A8%E7%BD%B2%E5%A4%9A%E4%B8%AA%E7%BD%91%E7%AB%99/">在80端口部署多个网站</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Server</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Web//" class="article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/09/%E5%9C%A8%E8%BD%AC%E6%88%98hexo-gitee%E6%97%B6%E8%B8%A9%E7%9A%84%E9%9B%B7/" class="archive-article-date">
-  	<time datetime="2020-03-09T14:06:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/09/%E5%9C%A8%E8%BD%AC%E6%88%98hexo-gitee%E6%97%B6%E8%B8%A9%E7%9A%84%E9%9B%B7/">在转战hexo+gitee时踩的雷</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Web//" class="article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/09/Establish-a-Website-for-the-first-time/" class="archive-article-date">
-  	<time datetime="2020-03-09T13:27:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/09/Establish-a-Website-for-the-first-time/">Establish a Website for the first time</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Web//" class="article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/09/hello-world/" class="archive-article-date">
-  	<time datetime="2020-03-09T12:02:17.204Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/09/hello-world/">Hello World</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/wuyi000925.github.io/archives/2020/">&amp;laquo; Prev</a><a class="page-number" href="/wuyi000925.github.io/archives/2020/">1</a><span class="page-number current">2</span>
-    </nav>
+  
+
+  
+
   
 
 
@@ -498,8 +425,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

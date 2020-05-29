@@ -6,17 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://twzx.gitee.io/wuyi000925.github.io">
-  <title>Archives: 2020 | Lanyuexuan</title>
+  <title>pwn0x02-ROP | Lanyuexuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="A blog recording my study path.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Lanyuexuan">
-<meta property="og:url" content="http://twzx.gitee.io/wuyi000925.github.io/archives/2020/page/2/index.html">
+  <meta name="description" content="PWN-0x02 ROP Return Oriented Programming  eg.ret2shellcode  &amp;  ret2libc 开启NX(No-eXecute)保护则堆栈不可执行  vmap看权限">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pwn0x02-ROP">
+<meta property="og:url" content="http://twzx.gitee.io/wuyi000925.github.io/2020/05/29/pwn0x02-ROP/index.html">
 <meta property="og:site_name" content="Lanyuexuan">
-<meta property="og:description" content="A blog recording my study path.">
+<meta property="og:description" content="PWN-0x02 ROP Return Oriented Programming  eg.ret2shellcode  &amp;  ret2libc 开启NX(No-eXecute)保护则堆栈不可执行  vmap看权限">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img-blog.csdn.net/20170123155535419?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXFfMTg2NjEyNTc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="article:published_time" content="2020-05-29T12:41:57.000Z">
+<meta property="article:modified_time" content="2020-05-29T12:43:44.009Z">
 <meta property="article:author" content="Wu">
+<meta property="article:tag" content="Bin">
+<meta property="article:tag" content="Pwn">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20170123155535419?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXFfMTg2NjEyNTc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
   
     <link rel="alternative" href="/atom.xml" title="Lanyuexuan" type="application/atom+xml">
   
@@ -154,109 +160,83 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-pwn0x02-ROP" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/wuyi000925.github.io/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/11/First-time-to-use-vim/" class="archive-article-date">
-  	<time datetime="2020-03-11T12:50:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-11</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/11/First-time-to-use-vim/">First time to use vim</a>
+    <h1 class="article-title" itemprop="name">
+      pwn0x02-ROP
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/wuyi000925.github.io/2020/05/29/pwn0x02-ROP/" class="archive-article-date">
+  	<time datetime="2020-05-29T12:41:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="PWN-0x02-ROP"><a href="#PWN-0x02-ROP" class="headerlink" title="PWN-0x02 ROP"></a>PWN-0x02 ROP</h1><p> <strong>R</strong>eturn <strong>O</strong>riented <strong>P</strong>rogramming </p>
+<p>eg.ret2shellcode  &amp;  ret2libc</p>
+<p>开启NX(No-eXecute)保护则堆栈不可执行</p>
+<blockquote>
+<p>vmap看权限</p>
+</blockquote>
+<a id="more"></a>
+
+<p>动态链接-dynamically linked</p>
+<p>静态链接-statically linked</p>
+<h2 id="0x01-系统调用"><a href="#0x01-系统调用" class="headerlink" title="0x01 系统调用"></a>0x01 系统调用</h2><p><strong>32bit: int 0x80</strong></p>
+<p><strong>64bit: system call</strong></p>
+<p>sys_execve;sys_write;sys_read;sys_open;sys_close.</p>
+<p>execve(“/bin/sh”,0,0) == system(“/bin/sh”)</p>
+<p>eax&lt;-0x0b == sys_execve(ebx,ecx,edx)</p>
+<h2 id="0x02-Shellcode生成机制"><a href="#0x02-Shellcode生成机制" class="headerlink" title="0x02 Shellcode生成机制"></a>0x02 Shellcode生成机制</h2><p>asm(shellcraft.i386.linux.sh(),arch=’i386’,os=’linux’)</p>
+<p>tip: 这是pwntools自带的，有的题目（比如有长度限制的）会不可用。</p>
+<p>payload = shellcode.ljust( int len(偏移)  ,   chr (垃圾字节) )</p>
+<h2 id="0x03-PLT表-amp-GOT表的机制"><a href="#0x03-PLT表-amp-GOT表的机制" class="headerlink" title="0x03 PLT表&amp;GOT表的机制"></a>0x03 PLT表&amp;GOT表的机制</h2><p>PLT（Procedure Linkage Table）程序链接表。它有两个功能，要么在 <code>.got.plt</code> 节中拿到地址，并跳转。要么当 <code>.got.plt</code> 没有所需地址的时，触发「链接器」去找到所需地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1 jmp	DWORD PTR ds:&amp;addr(一个函数) #进入堆栈前为下一条命令的地址</span><br><span class="line">2 push  0x18</span><br><span class="line">3 jmp   &amp;addr  #执行完后，上一个地址变为真正的</span><br></pre></td></tr></table></figure>
+
+<p> GOT（Global Offset Table）全局偏移表。这是「链接器」为「外部符号」填充的实际偏移表。 </p>
+<p> PLT表中的数据就是GOT表中的一个地址 ，基本上是一一对应的，但GOT[1]和GOT[2]被PLT[0]利用 ，所以</p>
+<p>  <img src="https://img-blog.csdn.net/20170123155535419?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXFfMTg2NjEyNTc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="img"> </p>
+<p> PLT表中的每一项的数据内容都是对应的GOT表中一项的地址这个是固定不变的, PLT表中的数据根本不是函数的真实地址，而是GOT表项的地址。 进入带有@plt标志的函数时，这个函数其实就是个过渡作用，因为GOT表项中的数据才是函数最终的地址，而PLT表中的数据又是GOT表项的地址，我们就可以通过PLT表跳转到GOT表来得到函数真正的地址。 </p>
+<h2 id="0x04-伪造栈帧"><a href="#0x04-伪造栈帧" class="headerlink" title="0x04 伪造栈帧"></a>0x04 伪造栈帧</h2><p>PLT表具有如下结构，和正常函数无异</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">pop</span><br><span class="line">mov</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">.</span><br><span class="line">leave</span><br><span class="line">ret</span><br><span class="line">参数2</span><br><span class="line">参数1</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">        aaa</span><br><span class="line">        aaa</span><br><span class="line">        aaa</span><br><span class="line">        aaa</span><br><span class="line">先esp--&gt;system_plt</span><br><span class="line">后esp--&gt;0</span><br><span class="line">        &#x2F;bin&#x2F;s1h</span><br></pre></td></tr></table></figure>
+
+<p>func_addr == libc_base + func_offset ==&gt; 找基址，找到库的基址，库内别的函数的地址就都知道了</p>
+<p>libc_version=LibcSearcher(‘Func’,Func_addr)</p>
+<p><strong>注意libc库的版本，不同版本的ubuntu所用的libc也不同</strong></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vim</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/linux//" class="article-tag-list-link color1">linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/10/WP-of-homework-in-Winter-Holiday/" class="archive-article-date">
-  	<time datetime="2020-03-10T12:27:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/10/WP-of-homework-in-Winter-Holiday/">WP of homework in Winter Holiday</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">WP</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Pwn</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -269,210 +249,103 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://twzx.gitee.io/wuyi000925.github.io/2020/05/29/pwn0x02-ROP/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/10/%E5%9C%A880%E7%AB%AF%E5%8F%A3%E9%83%A8%E7%BD%B2%E5%A4%9A%E4%B8%AA%E7%BD%91%E7%AB%99/" class="archive-article-date">
-  	<time datetime="2020-03-10T12:24:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-10</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/wuyi000925.github.io/2020/05/29/pwn0x01-%E6%A0%88%E6%BA%A2%E5%87%BA/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">pwn0x01-栈溢出</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/10/%E5%9C%A880%E7%AB%AF%E5%8F%A3%E9%83%A8%E7%BD%B2%E5%A4%9A%E4%B8%AA%E7%BD%91%E7%AB%99/">在80端口部署多个网站</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Server</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Web//" class="article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/09/%E5%9C%A8%E8%BD%AC%E6%88%98hexo-gitee%E6%97%B6%E8%B8%A9%E7%9A%84%E9%9B%B7/" class="archive-article-date">
-  	<time datetime="2020-03-09T14:06:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/09/%E5%9C%A8%E8%BD%AC%E6%88%98hexo-gitee%E6%97%B6%E8%B8%A9%E7%9A%84%E9%9B%B7/">在转战hexo+gitee时踩的雷</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Web//" class="article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/09/Establish-a-Website-for-the-first-time/" class="archive-article-date">
-  	<time datetime="2020-03-09T13:27:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/09/Establish-a-Website-for-the-first-time/">Establish a Website for the first time</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Web//" class="article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/09/hello-world/" class="archive-article-date">
-  	<time datetime="2020-03-09T12:02:17.204Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/09/hello-world/">Hello World</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/wuyi000925.github.io/archives/2020/">&amp;laquo; Prev</a><a class="page-number" href="/wuyi000925.github.io/archives/2020/">1</a><span class="page-number current">2</span>
-    </nav>
+  
+
+  
+
   
 
 
@@ -498,8 +371,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

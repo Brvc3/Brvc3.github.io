@@ -16,7 +16,7 @@
 <meta property="og:description" content="1.hold on &amp;hold off看了Matlab教程中关于hold on &amp;hold off的内容，有点迷糊，故查阅CSDN  hold on是当前轴及图像保持而不被刷新，准备接受此后将绘制的图形，多图共存，即启动图形保持功能，当前坐标轴和图形都将保持，从此绘制的图形都将添加在这个图形的基础上，并自动调整坐标轴的范围。 hold off使当前轴及图像不再具备被刷新的性质，新图">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-04-08T11:23:51.000Z">
-<meta property="article:modified_time" content="2020-04-08T11:26:46.728Z">
+<meta property="article:modified_time" content="2020-05-29T12:48:53.303Z">
 <meta property="article:author" content="Wu">
 <meta property="article:tag" content="matlab">
 <meta property="article:tag" content="math">
@@ -182,6 +182,8 @@
 <blockquote>
 <p>hold on是当前轴及图像保持而不被刷新，准备接受此后将绘制的图形，多图共存，即启动图形保持功能，当前坐标轴和图形都将保持，从此绘制的图形都将添加在这个图形的基础上，并自动调整坐标轴的范围。</p>
 <p>hold off使当前轴及图像不再具备被刷新的性质，新图出现时，取消原图。即关闭图形保持功能。</p>
+<a id="more"></a>
+
 <p>hold on 和hold off，是相对使用的<br>前者的意思是，你在当前图的轴（坐标系）中画了一幅图，再画另一幅图时，原来的图还在，与新图共存，都看得到<br>后者表达的是，你在当前图的轴（坐标系）中画了一幅图，此时，状态是hold off,则再画另一幅图时，原来的图就看不到了，在轴上绘制的是新图，原图被替换了</p>
 </blockquote>
 <p>即 Matlab中绘图，默认为“新画一张图时，先抹去原有图”。hold on使得原有图片保存下来，新旧图片共存。hold off则取消改状态，下次绘图时会抹去原有图片。</p>
@@ -427,6 +429,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">vim</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Tech</a>
               </li>
              
@@ -451,14 +461,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vim</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Bin</a>
               </li>
              
@@ -472,6 +474,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Misc</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Pwn</a>
               </li>
              
               <li class="article-tag-list-item">
