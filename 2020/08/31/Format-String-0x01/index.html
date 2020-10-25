@@ -6,15 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://twzx.gitee.io/wuyi000925.github.io">
-  <title>Category: python | Lanyuexuan</title>
+  <title>Format String 0x01 | Lanyuexuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="A blog recording my study path.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Lanyuexuan">
-<meta property="og:url" content="http://twzx.gitee.io/wuyi000925.github.io/category/python/index.html">
+  <meta name="description" content="Format String 0x01原理假设我们在编写程序时候，写成了下面的样子 1printf(&quot;Color %s, Number %d, Float %4.2f\n&quot;);  此时我们可以发现我们并没有提供参数，那么程序会如何运行呢？程序照样会运行，会将栈上存储格式化字符串地址上面的三个变量分别解析为  解析其地址对应的字符串 解析其内容对应的整形值 解析其内容对应的浮点值  在Linux中编译">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Format String 0x01">
+<meta property="og:url" content="http://twzx.gitee.io/wuyi000925.github.io/2020/08/31/Format-String-0x01/index.html">
 <meta property="og:site_name" content="Lanyuexuan">
-<meta property="og:description" content="A blog recording my study path.">
+<meta property="og:description" content="Format String 0x01原理假设我们在编写程序时候，写成了下面的样子 1printf(&quot;Color %s, Number %d, Float %4.2f\n&quot;);  此时我们可以发现我们并没有提供参数，那么程序会如何运行呢？程序照样会运行，会将栈上存储格式化字符串地址上面的三个变量分别解析为  解析其地址对应的字符串 解析其内容对应的整形值 解析其内容对应的浮点值  在Linux中编译">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-08-31T06:53:52.000Z">
+<meta property="article:modified_time" content="2020-08-31T08:09:22.259Z">
 <meta property="article:author" content="Wu">
 <meta name="twitter:card" content="summary">
   
@@ -154,75 +156,174 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Format-String-0x01" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/wuyi000925.github.io/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/17/Python-dict/" class="archive-article-date">
-  	<time datetime="2020-03-17T00:24:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-17</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/17/Python-dict/">Python dict()</a>
+    <h1 class="article-title" itemprop="name">
+      Format String 0x01
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">script</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        <a href="/wuyi000925.github.io/2020/08/31/Format-String-0x01/" class="archive-article-date">
+  	<time datetime="2020-08-31T06:53:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-31</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Format-String-0x01"><a href="#Format-String-0x01" class="headerlink" title="Format String 0x01"></a>Format String 0x01</h1><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>假设我们在编写程序时候，写成了下面的样子</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">"Color %s, Number %d, Float %4.2f\n"</span>);</span><br></pre></td></tr></table></figure>
 
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/python//" class="article-tag-list-link color2">python</a>
-        		</li>
-      		
-		</ul>
-	</div>
+<p>此时我们可以发现我们并没有提供参数，那么程序会如何运行呢？程序照样会运行，会将栈上存储格式化字符串地址上面的三个变量分别解析为</p>
+<ol>
+<li>解析其地址对应的字符串</li>
+<li>解析其内容对应的整形值</li>
+<li>解析其内容对应的浮点值</li>
+</ol>
+<p>在Linux中编译运行后会得到如下情况：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ gcc foemat_string_test.c  -o format_string_test_ex</span><br><span class="line">foemat_string_test.c: In function ‘main’:</span><br><span class="line">foemat_string_test.c:5:9: warning: format ‘%s’ expects a matching ‘char *’ argument [-Wformat&#x3D;]</span><br><span class="line">  printf(&quot;Color %s, Number %d, Float %4.2f\n&quot;);</span><br><span class="line">         ^</span><br><span class="line">foemat_string_test.c:5:9: warning: format ‘%d’ expects a matching ‘int’ argument [-Wformat&#x3D;]</span><br><span class="line">foemat_string_test.c:5:9: warning: format ‘%f’ expects a matching ‘double’ argument [-Wformat&#x3D;]</span><br><span class="line"></span><br><span class="line">$ .&#x2F;format_string_test_ex </span><br><span class="line">Color T��, Number 251330008, Float 0.00</span><br></pre></td></tr></table></figure>
 
+<p>可以看到虽然因为没有分配参数而报了warning，但是可以编译并将栈上的内容打印了出来。</p>
+<p>对于 2，3 来说倒还无妨，但是对于对于 1 来说，如果提供了一个不可访问地址，比如 0，那么程序就会因此而崩溃。</p>
+<h2 id="利用手段"><a href="#利用手段" class="headerlink" title="利用手段"></a>利用手段</h2><ul>
+<li>使程序崩溃，因为 %s 对应的参数地址不合法的概率比较大。</li>
+<li>查看进程内容，根据 %d，%f 输出了栈上的内容。</li>
+</ul>
+<p>CTF中主要使用第二中手段打印我们想要的内容，一般会有如下几种操作</p>
+<ul>
+<li>泄露栈内存<ul>
+<li>获取某个变量的值</li>
+<li>获取某个变量对应地址的内存</li>
+</ul>
+</li>
+<li>泄露任意地址内存<ul>
+<li>利用 GOT 表得到 libc 函数地址，进而获取 libc，进而获取其它 libc 函数地址</li>
+<li>盲打，dump 整个程序，获取有用信息。</li>
+</ul>
+</li>
+</ul>
 
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://twzx.gitee.io/wuyi000925.github.io/2020/08/31/Format-String-0x01/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/wuyi000925.github.io/2020/10/25/Off-by-One-1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Off-by-One(1)
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/wuyi000925.github.io/2020/05/29/pwn0x02-ROP/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">pwn0x02-ROP</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -247,10 +348,10 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
-		isCategory: true,
+		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
 		root: "/wuyi000925.github.io/",

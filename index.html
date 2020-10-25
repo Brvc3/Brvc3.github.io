@@ -156,6 +156,297 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Off-by-One-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/wuyi000925.github.io/2020/10/25/Off-by-One-1/">Off-by-One(1)</a>
+    </h1>
+  
+
+        
+        <a href="/wuyi000925.github.io/2020/10/25/Off-by-One-1/" class="archive-article-date">
+  	<time datetime="2020-10-25T14:35:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Off-By-One-chunk-overlapping"><a href="#Off-By-One-chunk-overlapping" class="headerlink" title="Off-By-One  chunk overlapping"></a>Off-By-One  chunk overlapping</h1><p><code>off-by-one</code>漏洞是一种特殊的溢出漏洞，<code>off-by-one</code>指程序向缓冲区中写入时，写入的字节数超过了这个缓冲区本身所申请的字节数并且只越界了<strong>一</strong>个字节。 </p>
+<p>该漏洞有两种主要的利用方法，其中unlink我还没看，这里只写<code>chunk overlapping</code>。</p>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><ul>
+<li>堆是动态分配的，只有在程序中需要时才会分配</li>
+<li>堆是程序虚拟地址空间的一块连续的线性区域</li>
+<li>堆的生长方向是从低地址向高地址生长的，而栈是从高地址向低地址生长的</li>
+<li>CPU的字节序是小端序，Off-By-One覆盖的是相邻高地址堆块的低字节</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//structure of chunk</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">malloc_chunk</span> &#123;</span></span><br><span class="line">  INTERNAL_SIZE_T      mchunk_prev_size;  </span><br><span class="line">  INTERNAL_SIZE_T      mchunk_size;       </span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">malloc_chunk</span>* <span class="title">fd</span>;</span>        </span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">malloc_chunk</span>* <span class="title">bk</span>;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">malloc_chunk</span>* <span class="title">fd_nextsize</span>;</span> </span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">malloc_chunk</span>* <span class="title">bk_nextsize</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h2><p>该漏洞的产生往往与边界验证不严$$^{[1]}$$和字符串操作$$^{[2]}$$有关。</p>
+<ul>
+<li><p>[1]使用循环语句向堆块中写入数据时，循环的次数设置错误导致多写入了一个字节。</p>
+<p>（eg.:<code>for(i=0;i&lt;=len;i++</code>比应该输入的num次多了一次，造成溢出）</p>
+</li>
+<li><p>[2]字符串操作不合适</p>
+<p>(eg.:<code>strcpy</code>会将最后截断的<code>\x00</code>也copy进去)</p>
+</li>
+</ul>
+<blockquote>
+<p>一般来说，单字节溢出被认为是难以利用的，但是因为 Linux 的堆管理机制 <code>ptmalloc</code> 验证的松散性，基于 Linux 堆的 off-by-one 漏洞利用起来并不复杂，并且威力强大。 此外，需要说明的一点是 off-by-one 是可以基于各种缓冲区的，比如栈、bss 段等等，但是堆上（heap based） 的 off-by-one 是 CTF 中比较常见的。我们这里仅讨论堆上的 off-by-one 情况。</p>
+</blockquote>
+<p>ptmalloc 通过 chunk header 的数据判断 chunk 的使用情况（ 仅通过下一块的inuse位 [ 在size域中 ] 来判定当前块是否使用）和对 chunk 的前后块进行定位。简而言之，chunk extend 就是通过控制 size 和 pre_size 域来实现跨越块操作从而导致 overlapping 的。 </p>
+<p>一个处于使用状态的chunk如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of chunk, in bytes                     |A|M|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             User data starts here...                          .</span><br><span class="line">        .                                                               .</span><br><span class="line">        .             (malloc_usable_size() bytes)                      .</span><br><span class="line">next    .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             (size of chunk, but used for application data)    |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|1|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
+
+<p>一个处于释放状态的chunk如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of previous chunk, if unallocated (P clear)  |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">&#96;head:&#39; |             Size of chunk, in bytes                     |A|0|P|</span><br><span class="line">  mem-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Forward pointer to next chunk in list             |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Back pointer to previous chunk in list            |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Unused space (may be 0 bytes long)                .</span><br><span class="line">        .                                                               .</span><br><span class="line"> next   .                                                               |</span><br><span class="line">chunk-&gt; +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">&#96;foot:&#39; |             Size of chunk, in bytes                           |</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">        |             Size of next chunk, in bytes                |A|0|0|</span><br><span class="line">        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
+
+<h2 id="利用分类"><a href="#利用分类" class="headerlink" title="利用分类"></a>利用分类</h2><p> off-by-one中的chunk overlapping可以细分为<strong>3</strong>种利用方式 </p>
+<ol>
+<li><p>off-by-one overwrite allocated</p>
+</li>
+<li><p>off-by-one overwrite freed</p>
+</li>
+<li><p>off-by-one null byte</p>
+</li>
+</ol>
+<h2 id="利用条件"><a href="#利用条件" class="headerlink" title="利用条件"></a>利用条件</h2><p>off-by-one并不是全都可以达到利用的目的的。首先就要求堆必须以要求的size+0x4字节（x86）的大小进行分配。如果不满足这个条件那么就无法覆盖到inuse位了。这个是由于堆的字节对齐机制造成的，简单的说堆块是以8字节进行对齐的（x64为16字节）。如果malloc(1024)，那么实际会分配1024+8=1032字节，这一点很好理解。但是如果是malloc(1020)呢，1020+8=1028字节，而1028不满足8字节对齐，那么实际只会分配1020+4=1024字节，多出的4个字节由下一块的prev_size提供空间。</p>
+<h2 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h2><p>所谓的chunk overlapping是指，针对一个目标堆块。我们可以通过一些操作，使这个目标堆块被我们重新分配到某个我们控制的新的堆块中，这样就可以对目标堆块进行任意的读写了。 具体有以下两种利用思路。</p>
+<ol>
+<li>溢出字节为可控制任意字节：通过修改大小造成块结构之间出现重叠，从而泄露其他块数据，或是覆盖其他块数据。也可使用 NULL 字节溢出的方法</li>
+<li>溢出字节为 NULL 字节：在 size 为 0x100 的时候，溢出 NULL 字节可以使得 <code>prev_in_use</code> 位被清，这样前块会被认为是 free 块。、这时 <code>prev_size</code> 域就会启用，就可以伪造 <code>prev_size</code> ，从而造成块之间发生重叠。此方法的关键在于 unlink 的时候没有检查按照 <code>prev_size</code> 找到的块的大小与<code>prev_size</code> 是否一致。</li>
+</ol>
+<h2 id="利用方法"><a href="#利用方法" class="headerlink" title="利用方法"></a>利用方法</h2><h3 id="off-by-one-overwrite-allocated"><a href="#off-by-one-overwrite-allocated" class="headerlink" title="off-by-one overwrite allocated"></a>off-by-one overwrite allocated</h3><p>在这种情况下堆块布局是这样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+--------+--------+--------+</span><br><span class="line">|    A   +    B   +    C   |  </span><br><span class="line">+--------+--------+--------+</span><br><span class="line">A发生溢出覆盖到B的size域</span><br><span class="line">通过对B块的操作完成对C块的控制</span><br></pre></td></tr></table></figure>
+
+<p>A是发生有off-by-one的堆块，其中B和C是allocated状态的块。而且C是我们的攻击目标块。</p>
+<p>我们的目标是能够读写块C，那么就应该去构造出这样的内存布局。然后通过off-by-one去改写块B的size域（注意要保证inuse域的值为1，否则会触发unlink导致crash）以实现把C块给整个包含进来。通过把B给free掉，然后再allocated一个大于B+C的块就可以返回B的地址，并且可以读写块C了。</p>
+<p>具体的操作是：</p>
+<ol>
+<li><p>构成图示的内存布局</p>
+</li>
+<li><p>off-by-one改写B块的size域(增加大小以包含C，inuse位保持1)</p>
+</li>
+<li><p>free掉B块</p>
+</li>
+<li><p>malloc一个B+C大小的块</p>
+</li>
+<li><p>通过返回的地址即可对C任意读写</p>
+</li>
+</ol>
+<blockquote>
+<p>注意，必须要把C块整个包含进来，否则free时会触发check，导致抛出错误。因为ptmalloc实现时的验证逻辑是当前块的下一块的inuse必须为1，否则在free时会触发异常，这一点本来是为了防止块被double free而做的限制，却给我们伪造堆块造成了障碍。</p>
+</blockquote>
+<h3 id="off-by-one-overwrite-freed"><a href="#off-by-one-overwrite-freed" class="headerlink" title="off-by-one overwrite freed"></a>off-by-one overwrite freed</h3><p>在这种情况下堆块布局依然是这样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+--------+--------+--------+</span><br><span class="line">|    A   +    B   +    C   |  </span><br><span class="line">+--------+--------+--------+</span><br></pre></td></tr></table></figure>
+
+<p>A是发生有off-by-one的堆块，其中B是free状态的块,C是allocated块。而且C是我们的攻击目标块。</p>
+<p>我们的目标是能够读写块C，那么就应该去构造出这样的内存布局。然后通过off-by-one去改写块B的size域（注意要保证inuse域的值为1）以实现把C块给整个包含进来。但是这种情况下的B是free状态的,通过增大B块包含C块，然后再allocated一个B+C尺寸的堆块就可以返回B的地址，并且可以读写块C了。</p>
+<p>具体的操作是：</p>
+<ol>
+<li><p>构成图示的内存布局</p>
+</li>
+<li><p>off-by-one改写B块的size域(增加大小以包含C，inuse位保持1)</p>
+</li>
+<li><p>malloc一个B+C大小的块</p>
+</li>
+<li><p>通过返回的地址即可对C任意读写</p>
+</li>
+</ol>
+<h3 id="off-by-one-null-byte"><a href="#off-by-one-null-byte" class="headerlink" title="off-by-one null byte"></a>off-by-one null byte</h3><p>这种情况就与上面两种有所不同了，在这种情况下溢出的这个字节是一个’\x00’字节。这种off-by-one可能是最为常见的，因为strcpy的使用<strong>极易</strong>造成这种情况。</p>
+<p>就会产生这种null byte off-by-one，即拷贝一个字符串到一个同样长的缓冲区时，并未考虑到NULL字节。</p>
+<p>相比于前两种，这种利用方式就显得更复杂，而且对内存布局的要求也更高了。</p>
+<p>首先内存布局需要三个块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+--------+--------+--------+</span><br><span class="line">|    A   +    B   +    C   |  </span><br><span class="line">+--------+--------+--------+</span><br></pre></td></tr></table></figure>
+
+<p>其中A,B,C都是allocated块，A块发生了<code>null byte off-by-one</code>,覆盖了B块的<code>inuse</code>位，使B块伪造为free。然后在分配两个稍小的块b1、b2，根据ptmalloc的实现，这两个较小块（不能是fastbin）会分配在B块中。然后只要释放掉b1，再释放掉C，就会引发从原B块到C的合并。那么只要重新分配原B大小的chunk，就会重新得到b2。在这个例子中，b2是我们要进行读写的目标堆块。最后的堆块布局如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+--------+----+----+---+------+</span><br><span class="line">|    A   + b1 + b2 +   +  C   |  </span><br><span class="line">+--------+----+----+---+------+</span><br></pre></td></tr></table></figure>
+
+<p>布局堆块结构如ABC所示</p>
+<ol>
+<li><p>off-by-one覆盖B，目的是覆盖掉B的inuse位</p>
+</li>
+<li><p>free B</p>
+</li>
+<li><p>malloc b1,malloc b2</p>
+</li>
+<li><p>free C</p>
+</li>
+<li><p>free b1</p>
+</li>
+<li><p>malloc B</p>
+</li>
+<li><p>overlapping b2</p>
+</li>
+</ol>
+<p>这种利用方式成功的原因有两点:</p>
+<p>通过<code>prev_chunk()</code>宏查找前块时没有对<code>size</code>域进行验证</p>
+<p>当B块的<code>size</code>域被伪造后，下一块的<code>pre_size</code>域无法得到更新。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Pwn</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/wuyi000925.github.io/category/Bin//" class="article-tag-list-link color4">Bin</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/wuyi000925.github.io/2020/10/25/Off-by-One-1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Format-String-0x01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/wuyi000925.github.io/2020/08/31/Format-String-0x01/">Format String 0x01</a>
+    </h1>
+  
+
+        
+        <a href="/wuyi000925.github.io/2020/08/31/Format-String-0x01/" class="archive-article-date">
+  	<time datetime="2020-08-31T06:53:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-31</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Format-String-0x01"><a href="#Format-String-0x01" class="headerlink" title="Format String 0x01"></a>Format String 0x01</h1><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>假设我们在编写程序时候，写成了下面的样子</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">"Color %s, Number %d, Float %4.2f\n"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>此时我们可以发现我们并没有提供参数，那么程序会如何运行呢？程序照样会运行，会将栈上存储格式化字符串地址上面的三个变量分别解析为</p>
+<ol>
+<li>解析其地址对应的字符串</li>
+<li>解析其内容对应的整形值</li>
+<li>解析其内容对应的浮点值</li>
+</ol>
+<p>在Linux中编译运行后会得到如下情况：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ gcc foemat_string_test.c  -o format_string_test_ex</span><br><span class="line">foemat_string_test.c: In function ‘main’:</span><br><span class="line">foemat_string_test.c:5:9: warning: format ‘%s’ expects a matching ‘char *’ argument [-Wformat&#x3D;]</span><br><span class="line">  printf(&quot;Color %s, Number %d, Float %4.2f\n&quot;);</span><br><span class="line">         ^</span><br><span class="line">foemat_string_test.c:5:9: warning: format ‘%d’ expects a matching ‘int’ argument [-Wformat&#x3D;]</span><br><span class="line">foemat_string_test.c:5:9: warning: format ‘%f’ expects a matching ‘double’ argument [-Wformat&#x3D;]</span><br><span class="line"></span><br><span class="line">$ .&#x2F;format_string_test_ex </span><br><span class="line">Color T��, Number 251330008, Float 0.00</span><br></pre></td></tr></table></figure>
+
+<p>可以看到虽然因为没有分配参数而报了warning，但是可以编译并将栈上的内容打印了出来。</p>
+<p>对于 2，3 来说倒还无妨，但是对于对于 1 来说，如果提供了一个不可访问地址，比如 0，那么程序就会因此而崩溃。</p>
+<h2 id="利用手段"><a href="#利用手段" class="headerlink" title="利用手段"></a>利用手段</h2><ul>
+<li>使程序崩溃，因为 %s 对应的参数地址不合法的概率比较大。</li>
+<li>查看进程内容，根据 %d，%f 输出了栈上的内容。</li>
+</ul>
+<p>CTF中主要使用第二中手段打印我们想要的内容，一般会有如下几种操作</p>
+<ul>
+<li>泄露栈内存<ul>
+<li>获取某个变量的值</li>
+<li>获取某个变量对应地址的内存</li>
+</ul>
+</li>
+<li>泄露任意地址内存<ul>
+<li>利用 GOT 表得到 libc 函数地址，进而获取 libc，进而获取其它 libc 函数地址</li>
+<li>盲打，dump 整个程序，获取有用信息。</li>
+</ul>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/wuyi000925.github.io/2020/08/31/Format-String-0x01/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-pwn0x02-ROP" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -879,194 +1170,6 @@
 
 
   
-    <article id="post-Python-dict" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/wuyi000925.github.io/2020/03/17/Python-dict/">Python dict()</a>
-    </h1>
-  
-
-        
-        <a href="/wuyi000925.github.io/2020/03/17/Python-dict/" class="archive-article-date">
-  	<time datetime="2020-03-17T00:24:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.创建空字典</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dic = &#123;&#125;</span><br><span class="line">type(dic)</span><br><span class="line">&lt;type <span class="string">'dict'</span>&gt;</span><br></pre></td></tr></table></figure>
-        
-          <a class="article-more-a" href="/wuyi000925.github.io/2020/03/17/Python-dict/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">script</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/python//" class="article-tag-list-link color2">python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/wuyi000925.github.io/2020/03/17/Python-dict/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-第一次出题" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/wuyi000925.github.io/2020/03/11/%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%87%BA%E9%A2%98/">第一次出题</a>
-    </h1>
-  
-
-        
-        <a href="/wuyi000925.github.io/2020/03/11/%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%87%BA%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2020-03-11T12:51:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-11</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>等正式返校就要招新赛了，大二的ggjj出题的同时也孤立大一的出题，我突然想到个想法就出了一道。</p>
-<p>因为不能简单到f5直接出flag那种程度，所以写了个简单的加密（正好学长例会上刚讲了编码and古典密码）。</p>
-<p>第一次接触密码学还是看罗伯特兰登系列了……差不多也是因为喜欢密码学才入坑的CTF吧……</p>
-<p>题目源码……算了，打完招新赛再上传吧。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Reverse</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Bin//" class="article-tag-list-link color4">Bin</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/wuyi000925.github.io/2020/03/11/%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%87%BA%E9%A2%98/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/wuyi000925.github.io/page/2/">2</a><a class="extend next" rel="next" href="/wuyi000925.github.io/page/2/">Next &amp;raquo;</a>
@@ -1162,19 +1265,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vim</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Tech</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Web</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">vim</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">linux</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1186,15 +1289,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Bin</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Pwn</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">script</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Bin</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1206,15 +1313,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Misc</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Pwn</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Server</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Misc</a>
               </li>
             
             <div class="clearfix"></div>
