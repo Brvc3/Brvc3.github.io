@@ -6,21 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://twzx.gitee.io/wuyi000925.github.io">
-  <title>在转战hexo+gitee时踩的雷 | Brvc3&#39;s base</title>
+  <title>Use After Free | Brvc3&#39;s base</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="本来是在自己的阿里云服务器上用wordpress部署的博客，但服务器毕竟是免费领的半年的，还是转到免费的平台上好。于是选择了用hexo+gitee的模式，用gitee而不是github是因为访问速度的问题，因为不同于主流的hexo+github模式，期间踩了点雷，特此记录。">
+  <meta name="description" content="UAF Trying to pass CET-6 and get used to using English in daily life (Nu1l ‘s Write up looks so cool.) If this make it inconvenient for you to read this article, please use translation tools  of brows">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在转战hexo+gitee时踩的雷">
-<meta property="og:url" content="http://twzx.gitee.io/wuyi000925.github.io/2020/03/09/%E5%9C%A8%E8%BD%AC%E6%88%98hexo-gitee%E6%97%B6%E8%B8%A9%E7%9A%84%E9%9B%B7/index.html">
+<meta property="og:title" content="Use After Free">
+<meta property="og:url" content="http://twzx.gitee.io/wuyi000925.github.io/2021/03/29/Use-After-Free/index.html">
 <meta property="og:site_name" content="Brvc3&#39;s base">
-<meta property="og:description" content="本来是在自己的阿里云服务器上用wordpress部署的博客，但服务器毕竟是免费领的半年的，还是转到免费的平台上好。于是选择了用hexo+gitee的模式，用gitee而不是github是因为访问速度的问题，因为不同于主流的hexo+github模式，期间踩了点雷，特此记录。">
+<meta property="og:description" content="UAF Trying to pass CET-6 and get used to using English in daily life (Nu1l ‘s Write up looks so cool.) If this make it inconvenient for you to read this article, please use translation tools  of brows">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-03-09T14:06:16.000Z">
-<meta property="article:modified_time" content="2020-03-10T12:34:39.887Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/8293a3a7c9c8544c47d17437a15a72d4.png">
+<meta property="article:published_time" content="2021-03-29T07:54:29.000Z">
+<meta property="article:modified_time" content="2021-03-29T07:55:37.381Z">
 <meta property="article:author" content="Wu">
-<meta property="article:tag" content="Tech">
-<meta property="article:tag" content="Web">
+<meta property="article:tag" content="Bin">
+<meta property="article:tag" content="Pwn">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/img_convert/8293a3a7c9c8544c47d17437a15a72d4.png">
   
     <link rel="alternative" href="/atom.xml" title="Brvc3&#39;s base" type="application/atom+xml">
   
@@ -158,34 +160,123 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-在转战hexo-gitee时踩的雷" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-Use-After-Free" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      在转战hexo+gitee时踩的雷
+      Use After Free
     </h1>
   
 
         
-        <a href="/wuyi000925.github.io/2020/03/09/%E5%9C%A8%E8%BD%AC%E6%88%98hexo-gitee%E6%97%B6%E8%B8%A9%E7%9A%84%E9%9B%B7/" class="archive-article-date">
-  	<time datetime="2020-03-09T14:06:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
+        <a href="/wuyi000925.github.io/2021/03/29/Use-After-Free/" class="archive-article-date">
+  	<time datetime="2021-03-29T07:54:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-03-29</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>本来是在自己的阿里云服务器上用wordpress部署的博客，但服务器毕竟是免费领的半年的，还是转到免费的平台上好。<br>于是选择了用hexo+gitee的模式，用gitee而不是github是因为访问速度的问题，因为不同于主流的hexo+github模式，期间踩了点雷，特此记录。</p>
+        <h1 id="UAF"><a href="#UAF" class="headerlink" title="UAF"></a>UAF</h1><blockquote>
+<p>Trying to pass CET-6 and get used to using English in daily life (Nu1l ‘s Write up looks so cool.)</p>
+<p>If this make it inconvenient for you to read this article, please use translation tools  of browsers.</p>
+</blockquote>
 <a id="more"></a>
+
+<h2 id="Principle"><a href="#Principle" class="headerlink" title="Principle"></a>Principle</h2><p>The main cause of the vulnerability is free the pointer without setting it to NULL after being freed. This kind of memory pointer that was not set to NULL after being freed is often called <strong>dangling pointer</strong>.</p>
+<p>Using dangling pointer will cause following 3  situations:</p>
 <ol>
-<li>url要设置成giteepages生成的地址，否则样式应用不了。</li>
-<li>添加搜索功能需要安装环境。</li>
-<li>gitee不能自动部署，就写了个脚本，但好像还有点缺陷，日后再改，作为一个自己看看的博客确实平时在本机访问也够了。<br>上传指令<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo d</span><br></pre></td></tr></table></figure>
-本来头像按GitHub上的引导设置为 /img/图片名.格式 这种样子时显示不出来，改为 img/图片名.格式 之后可以在Homepage显示出来，但进入别的页面时大概因为相对路径的缘故又会挂掉，最后改用微博图床，这样在pc端访问时头像就没有问题了。<br>但我发现手机端浏览的时候头像也会挂掉，不知原因，但平时查阅自己博客肯定也是在pc上，为了外观好看花费太多精力去改就有点浪费时间了，毕竟只是个技术记录博客，还是以内容为主。</li>
+<li><strong>Crash</strong> </li>
+<li>If the chunk it point to <strong>hasn’t</strong> been changed before it is used next time, then the program is likely to work <strong>properly</strong>.</li>
+<li>If the chunk it point to <strong>has</strong> been changed before it is used next time, then the program is likely to work <strong>weirdly</strong>.</li>
 </ol>
+<h2 id="Leak-Main-arena"><a href="#Leak-Main-arena" class="headerlink" title="Leak Main arena"></a>Leak Main arena</h2><p> <img src="https://img-blog.csdnimg.cn/img_convert/8293a3a7c9c8544c47d17437a15a72d4.png" alt="img"> </p>
+<p>We can see that if the length we enter is between 16 Bytes and 64 Bytes, the chunk will be sorted into <strong>fastbin</strong> at first after being freed. But the <code>chunks of which size is bigger than max_fast</code> or <code>free chunks in fastbin</code> will be  sort into unsorted bin after being integrated. While the fastbin is <strong>empty</strong>, the pointer <code>fd</code> and <code>bk</code> of unsortedbin point to the <strong>itself</strong> and the bin is in the main arena so we can get the address of main arena. After UAF, we can get the real address of main_arena, to get the real address of the libc.</p>
+<p>So what’s the relation of the <strong>address of unsorted bin</strong> and <strong>main arena</strong>?q</p>
+<blockquote>
+<p>in 64-bit the offset is<code>0x58</code></p>
+<p>in 32-bit the offset is <code>0x30</code> </p>
+</blockquote>
+<p>After getting the real address of main arena, we can get the real address of libc.</p>
+<blockquote>
+<p>In 32-bit, main_arena equals __malloc_hook + 0x10</p>
+<p>fd &amp; bk in unsorted bin often points to &lt;<strong>main_arena+88</strong> &gt;</p>
+</blockquote>
+<blockquote>
+<p>In 32-bit, main_arena equals __malloc_hook + 0x18</p>
+<p>fd &amp; bk in unsorted bin often points to &lt;<strong>main_arena+48</strong> &gt;</p>
+</blockquote>
+<p>address of __malloc_hook can be find in libc(drag it into IDA Pro)</p>
+<h2 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h2><p>Let’s take <code>freenote</code> as an example.</p>
+<p>As we are talking about UAF, we won’t solve the problem in this part. Instead, we will just try to leak the address of the Main Arena.</p>
+<h3 id="Reverse-Analysis"><a href="#Reverse-Analysis" class="headerlink" title="Reverse Analysis"></a>Reverse Analysis</h3><p><code>ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked.</code></p>
+<p><code>libc: libc-2.23.so</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Arch:     amd64-64-little</span><br><span class="line">RELRO:    Partial RELRO</span><br><span class="line">Stack:    Canary found</span><br><span class="line">NX:       NX enabled</span><br><span class="line">PIE:      No PIE (0x400000)</span><br></pre></td></tr></table></figure>
+
+<p>Canary and NX are enabled.</p>
+<p>Use IDA to decompile the file.</p>
+<p>Main logical structure :</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">switch</span> ( sub_400998() )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">        List();</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">        New();</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">        Edit();</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">        Delete();</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">"Bye"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0L</span>L;</span><br><span class="line">      <span class="keyword">default</span>:</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">"Invalid!"</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">New</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  __int64 v0; <span class="comment">// rax</span></span><br><span class="line">  <span class="keyword">void</span> *addr; <span class="comment">// ST18_8</span></span><br><span class="line">  <span class="keyword">int</span> i; <span class="comment">// [rsp+Ch] [rbp-14h]</span></span><br><span class="line">  <span class="keyword">int</span> length; <span class="comment">// [rsp+10h] [rbp-10h]</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ( *(_QWORD *)(start_of_note + <span class="number">8</span>) &lt; *(_QWORD *)start_of_note )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">for</span> ( i = <span class="number">0</span>; ; ++i )</span><br><span class="line">    &#123;</span><br><span class="line">      v0 = *(_QWORD *)start_of_note;</span><br><span class="line">      <span class="keyword">if</span> ( (<span class="keyword">signed</span> __int64)i &gt;= *(_QWORD *)start_of_note )</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      <span class="keyword">if</span> ( !*(_QWORD *)(start_of_note + <span class="number">24L</span>L * i + <span class="number">16</span>) )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Length of new note: "</span>);</span><br><span class="line">        length = sub_40094E();</span><br><span class="line">        <span class="keyword">if</span> ( length &gt; <span class="number">0</span> )</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="keyword">if</span> ( length &gt; <span class="number">4096</span> )</span><br><span class="line">            length = <span class="number">4096</span>;</span><br><span class="line">          addr = <span class="built_in">malloc</span>((<span class="number">128</span> - length % <span class="number">128</span>) % <span class="number">128</span> + length);</span><br><span class="line">            <span class="comment">// apply for the minimum size(128mod) bigger than length</span></span><br><span class="line">          <span class="built_in">printf</span>(<span class="string">"Enter your note: "</span>);</span><br><span class="line">          read_note((__int64)addr, length);</span><br><span class="line">          *(_QWORD *)(start_of_note + <span class="number">24L</span>L * i + <span class="number">16</span>) = <span class="number">1L</span>L;</span><br><span class="line">          *(_QWORD *)(start_of_note + <span class="number">24L</span>L * i + <span class="number">24</span>) = length;<span class="comment">// record the length of the note</span></span><br><span class="line">          *(_QWORD *)(start_of_note + <span class="number">24L</span>L * i + <span class="number">32</span>) = addr;<span class="comment">// addr of the note</span></span><br><span class="line">          ++*(_QWORD *)(start_of_note + <span class="number">8</span>);</span><br><span class="line">          LODWORD(v0) = <span class="built_in">puts</span>(<span class="string">"Done."</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">          LODWORD(v0) = <span class="built_in">puts</span>(<span class="string">"Invalid length!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> v0;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    LODWORD(v0) = <span class="built_in">puts</span>(<span class="string">"Unable to create new note."</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> v0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>start_note’s address is 0x006020A8, we can use gdb to see what’s in it.</p>
+<p>We can see the structure of the start_note, it’s a table recording data of notes</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ x&#x2F;30wx *0x06020A8</span><br><span class="line">0x00000100	0x00000000	0x00000002	</span><br><span class="line">                         ^ :num of notes</span><br><span class="line">0x00000000  0x00000001 || 0x00000000  0x00000002 || 0x00000000	0x00604830	</span><br><span class="line">                ^ flag(if active)        ^ len of note             ^addr of the note</span><br><span class="line">0x00000000	0x00000001 || 0x00000000  0x00000001 ||	0x00000000	0x006048c0</span><br></pre></td></tr></table></figure>
+
+<p>So we can know that the struct of node_note is </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node_note</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	<span class="keyword">int</span> if_active;</span><br><span class="line">    <span class="keyword">int</span> len;</span><br><span class="line">    <span class="keyword">char</span> *note;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Let’s take a look at the function Delete()</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Delete</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> id; <span class="comment">// [rsp+Ch] [rbp-4h]</span></span><br><span class="line">    </span><br><span class="line">  <span class="keyword">if</span> ( *(_QWORD *)(start_of_note + <span class="number">8</span>) &lt;= <span class="number">0L</span>L )</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">puts</span>(<span class="string">"No notes yet."</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"Note number: "</span>);</span><br><span class="line">  id = sub_40094E();</span><br><span class="line">  <span class="keyword">if</span> ( id &lt; <span class="number">0</span> || (<span class="keyword">signed</span> __int64)id &gt;= *(_QWORD *)start_of_note )</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">puts</span>(<span class="string">"Invalid number!"</span>);</span><br><span class="line">  --*(_QWORD *)(start_of_note + <span class="number">8</span>);<span class="comment">//set flag as 0</span></span><br><span class="line">  *(_QWORD *)(start_of_note + <span class="number">24L</span>L * id + <span class="number">16</span>) = <span class="number">0L</span>L;<span class="comment">//set len as 0</span></span><br><span class="line">  *(_QWORD *)(start_of_note + <span class="number">24L</span>L * id + <span class="number">24</span>) = <span class="number">0L</span>L;</span><br><span class="line">  <span class="built_in">free</span>(*(<span class="keyword">void</span> **)(start_of_note + <span class="number">24L</span>L * id + <span class="number">32</span>));<span class="comment">//free the content pointed by the addr</span></span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">puts</span>(<span class="string">"Done."</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>We can see that the pointer hasn’t been set as NULL after the content it points being freed, so it becomes a dangling pointer. Perhaps there exist double free  vulnerability. (Of course it’s double free, after all we are talking about double free.)</p>
+<p>Since the ‘\n’ take 1 byte, we can only enter (Length-1) characters.</p>
+<h3 id="GDB-debugging"><a href="#GDB-debugging" class="headerlink" title="GDB debugging"></a>GDB debugging</h3><ol>
+<li>Create 2 notes. In order to leak main arena, we’re supposed to ensure the length of note is small so that it will be sorted into fastbin at first and then integrated into unsortedbin.</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">== <span class="number">0</span>ops Free Note ==</span><br><span class="line"><span class="number">1.</span> List Note</span><br><span class="line"><span class="number">2.</span> New Note</span><br><span class="line"><span class="number">3.</span> Edit Note</span><br><span class="line"><span class="number">4.</span> Delete Note</span><br><span class="line"><span class="number">5.</span> Exit</span><br><span class="line">====================</span><br><span class="line">Your choice: <span class="number">2</span></span><br><span class="line">Length of <span class="keyword">new</span> note: <span class="number">8</span></span><br><span class="line">Enter your note: aaaaaaa</span><br><span class="line">Done.</span><br><span class="line">== <span class="number">0</span>ops Free Note ==</span><br><span class="line"><span class="number">1.</span> List Note</span><br><span class="line"><span class="number">2.</span> New Note</span><br><span class="line"><span class="number">3.</span> Edit Note</span><br><span class="line"><span class="number">4.</span> Delete Note</span><br><span class="line"><span class="number">5.</span> Exit</span><br><span class="line">====================</span><br><span class="line">Your choice: <span class="number">2</span></span><br><span class="line">Length of <span class="keyword">new</span> note: <span class="number">8</span></span><br><span class="line">Enter your note: bbbbbbb</span><br><span class="line">Done.</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ x&#x2F;wx 0x006020A8</span><br><span class="line">0x6020a8:	0x00603010</span><br></pre></td></tr></table></figure>
+
+<p>0x00603010 is the real memory block storing the data of notes, so let’s take a look at it.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ x&#x2F;30wx 0x00603010</span><br><span class="line">0x603010:	0x00000100	0x00000000	0x00000002	0x00000000</span><br><span class="line">0x603020:	0x00000001	0x00000000	0x00000008	0x00000000</span><br><span class="line">0x603030:	0x00604830	0x00000000	0x00000001	0x00000000</span><br><span class="line">0x603040:	0x00000008	0x00000000	0x006048c0	0x00000000</span><br><span class="line">0x603050:	0x00000000	0x00000000	0x00000000	0x00000000</span><br><span class="line">0x603060:	0x00000000	0x00000000	0x00000000	0x00000000</span><br><span class="line">0x603070:	0x00000000	0x00000000	0x00000000	0x00000000</span><br><span class="line">0x603080:	0x00000000	0x00000000</span><br></pre></td></tr></table></figure>
+
+<p>We can resort it to make it easy for us to see the structure.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0x00000100	0x00000000	0x00000002	;head of note</span><br><span class="line">0x00000000  0x00000001	0x00000000	0x00000008	0x00000000	0x00604830	;note 0</span><br><span class="line">0x00000000	0x00000001	0x00000000	0x00000008	0x00000000	0x006048c0	;note 1</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ x&#x2F;2wx 0x00604830</span><br><span class="line">0x604830:	0x61616161	0x0a616161</span><br><span class="line">gdb-peda$ x&#x2F;2wx 0x006048c0</span><br><span class="line">0x6048c0:	0x62626262	0x0a626262</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>Free the first note.</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Your choice: <span class="number">4</span></span><br><span class="line">Note number: <span class="number">0</span></span><br><span class="line">Done.</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ x&#x2F;20wx 0x00603010</span><br><span class="line">0x603010:	0x00000100	0x00000000	0x00000001	0x00000000</span><br><span class="line">0x603020:	0x00000000	0x00000000	0x00000000	0x00000000</span><br><span class="line">0x603030:	0x00604830	0x00000000	0x00000001	0x00000000</span><br><span class="line">0x603040:	0x00000008	0x00000000	0x006048c0	0x00000000</span><br><span class="line">0x603050:	0x00000000	0x00000000	0x00000000	0x00000000</span><br></pre></td></tr></table></figure>
+
+<p>we can see that the number of notes has been changed to 1 and the <code>if_active</code>  and  <code>len</code> have been set to 0. However, the pointer still exist. Let’ see what is in it.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ x&#x2F;4wx 0x604830</span><br><span class="line">0x604830:	0xf7dd1b78	0x00007fff	0xf7dd1b78	0x00007fff</span><br></pre></td></tr></table></figure>
+
+<p>since its Arch is amd64-64-little, <code>fd</code> is actually <code>0x7ffff7dd1b78</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ x&#x2F;10wx 0x7ffff7dd1b78</span><br><span class="line">0x7ffff7dd1b78 &lt;main_arena+88&gt; :	0x00604940	0x00000000	0x00000000	0x00000000</span><br><span class="line">0x7ffff7dd1b88 &lt;main_arena+104&gt;:	0x00604820	0x00000000	0x00604820	0x00000000</span><br><span class="line">0x7ffff7dd1b98 &lt;main_arena+120&gt;:	0xf7dd1b88	0x00007fff</span><br></pre></td></tr></table></figure>
+
+<p>0x7ffff7dd1b78 - 0x58 == 0x7ffff7dd1b20</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ x&#x2F;16wx 0x7ffff7dd1b20-0x20</span><br><span class="line">0x7ffff7dd1b00 &lt;__memalign_hook&gt;:	0xf7a92ea0	0x00007fff	0xf7a92a70	0x00007fff</span><br><span class="line">0x7ffff7dd1b10 &lt;__malloc_hook&gt;:	0x00000000	0x00000000	0x00000000	0x00000000</span><br><span class="line">0x7ffff7dd1b20 &lt;main_arena&gt;:	0x00000000	0x00000001	0x00000000	0x00000000</span><br><span class="line">0x7ffff7dd1b30 &lt;main_arena+16&gt;:	0x00000000	0x00000000	0x00000000	0x00000000</span><br></pre></td></tr></table></figure>
+
+<p>It works. </p>
+<blockquote>
+<p>the address of __malloc_hook just work as a toolman: help us find the main_arena</p>
+</blockquote>
+<p>In IDA we can see that the offset of main_arena is <code>0x003C2740</code></p>
+<p>In IDA, we can see the offset of main_arena is <code>0x3C4B20</code></p>
+<p>0x7ffff7dd1b20 - 0x3C4B20 == 0x7ffff7a0d000</p>
+<p>It seems like we get the real address of the libc_base, let’s check it. </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ vmmap</span><br><span class="line">Start              End                Perm	Name</span><br><span class="line">0x00400000         0x00402000         r-xp	&#x2F;home&#x2F;giantbranch&#x2F;Desktop&#x2F;heap&#x2F;freenote&#x2F;freenote_x64</span><br><span class="line">0x00601000         0x00602000         r--p	&#x2F;home&#x2F;giantbranch&#x2F;Desktop&#x2F;heap&#x2F;freenote&#x2F;freenote_x64</span><br><span class="line">0x00602000         0x00603000         rw-p	&#x2F;home&#x2F;giantbranch&#x2F;Desktop&#x2F;heap&#x2F;freenote&#x2F;freenote_x64</span><br><span class="line">0x00603000         0x00625000         rw-p	[heap]</span><br><span class="line">0x00007ffff7a0d000 0x00007ffff7bcd000 r-xp	&#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;libc-2.23.so</span><br><span class="line">0x00007ffff7bcd000 0x00007ffff7dcd000 ---p	&#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;libc-2.23.so</span><br><span class="line">0x00007ffff7dcd000 0x00007ffff7dd1000 r--p	&#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;libc-2.23.so</span><br><span class="line">0x00007ffff7dd1000 0x00007ffff7dd3000 rw-p	&#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;libc-2.23.so</span><br><span class="line">0x00007ffff7dd3000 0x00007ffff7dd7000 rw-p	mapped</span><br><span class="line">0x00007ffff7dd7000 0x00007ffff7dfd000 r-xp	&#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;ld-2.23.so</span><br><span class="line">0x00007ffff7fdb000 0x00007ffff7fde000 rw-p	mapped</span><br><span class="line">0x00007ffff7ff7000 0x00007ffff7ffa000 r--p	[vvar]</span><br><span class="line">0x00007ffff7ffa000 0x00007ffff7ffc000 r-xp	[vdso]</span><br><span class="line">0x00007ffff7ffc000 0x00007ffff7ffd000 r--p	&#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;ld-2.23.so</span><br><span class="line">0x00007ffff7ffd000 0x00007ffff7ffe000 rw-p	&#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;ld-2.23.so</span><br><span class="line">0x00007ffff7ffe000 0x00007ffff7fff000 rw-p	mapped</span><br><span class="line">0x00007ffffffde000 0x00007ffffffff000 rw-p	[stack]</span><br><span class="line">0xffffffffff600000 0xffffffffff601000 r-xp	[vsyscall]</span><br></pre></td></tr></table></figure>
+
+<p>That’ true! We get the real address of the libc base.</p>
 
       
 
@@ -199,11 +290,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Pwn</a>
         		</li>
       		
 		</ul>
@@ -215,7 +306,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Web//" class="article-tag-list-link color4">Web</a>
+        			<a href="/wuyi000925.github.io/category/Bin//" class="article-tag-list-link color4">Bin</a>
         		</li>
       		
 		</ul>
@@ -270,7 +361,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://twzx.gitee.io/wuyi000925.github.io/2020/03/09/%E5%9C%A8%E8%BD%AC%E6%88%98hexo-gitee%E6%97%B6%E8%B8%A9%E7%9A%84%E9%9B%B7/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://twzx.gitee.io/wuyi000925.github.io/2021/03/29/Use-After-Free/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -284,18 +375,9 @@
   
 <nav id="article-nav">
   
-    <a href="/wuyi000925.github.io/2020/03/10/%E5%9C%A880%E7%AB%AF%E5%8F%A3%E9%83%A8%E7%BD%B2%E5%A4%9A%E4%B8%AA%E7%BD%91%E7%AB%99/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          在80端口部署多个网站
-        
-      </div>
-    </a>
   
-  
-    <a href="/wuyi000925.github.io/2020/03/09/Establish-a-Website-for-the-first-time/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Establish a Website for the first time</div>
+    <a href="/wuyi000925.github.io/2021/03/29/Fastbin-Attacks/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Fastbin Attacks</div>
       <i class="icon-circle-right"></i>
     </a>
   
