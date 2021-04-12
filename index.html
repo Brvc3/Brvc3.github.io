@@ -158,6 +158,195 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Aarch64-Pwn初探" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/wuyi000925.github.io/2021/04/12/Aarch64-Pwn%E5%88%9D%E6%8E%A2/">Aarch64_Pwn初探</a>
+    </h1>
+  
+
+        
+        <a href="/wuyi000925.github.io/2021/04/12/Aarch64-Pwn%E5%88%9D%E6%8E%A2/" class="archive-article-date">
+  	<time datetime="2021-04-12T09:59:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Arm-Pwn-初体验"><a href="#Arm-Pwn-初体验" class="headerlink" title="Arm Pwn 初体验"></a>Arm Pwn 初体验</h1><h2 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h2><p> 2018上海大学生网络安全赛  baby_arm</p>
+<p>checksec</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[*] <span class="string">'/home/tty18pwn/Desktop/baby_arm/pwn'</span></span><br><span class="line">    Arch:     aarch64-64-little</span><br><span class="line">    RELRO:    Partial RELRO</span><br><span class="line">    Stack:    No canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      No PIE (0x400000)</span><br></pre></td></tr></table></figure>
+
+<p>开启了NX</p>
+        
+          <a class="article-more-a" href="/wuyi000925.github.io/2021/04/12/Aarch64-Pwn%E5%88%9D%E6%8E%A2/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Pwn</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/wuyi000925.github.io/category/Bin//" class="article-tag-list-link color4">Bin</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/wuyi000925.github.io/2021/04/12/Aarch64-Pwn%E5%88%9D%E6%8E%A2/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-异构pwn环境搭建" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/wuyi000925.github.io/2021/04/12/%E5%BC%82%E6%9E%84pwn%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">异构pwn环境搭建</a>
+    </h1>
+  
+
+        
+        <a href="/wuyi000925.github.io/2021/04/12/%E5%BC%82%E6%9E%84pwn%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="archive-article-date">
+  	<time datetime="2021-04-12T09:59:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-04-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="异构Pwn调试工具"><a href="#异构Pwn调试工具" class="headerlink" title="异构Pwn调试工具"></a>异构Pwn调试工具</h1><p>虎符杯给我看傻了，pwn是两道aarch64和两道区块链</p>
+<p>感觉异构pwn的环境还是有必要搭建一下</p>
+<p>静态的话比较方便，arm架构直接就能分析，mips的话IDA装了插件也可以直接F5</p>
+<p>主要还是linux里用来的动态调试的插件</p>
+        
+          <a class="article-more-a" href="/wuyi000925.github.io/2021/04/12/%E5%BC%82%E6%9E%84pwn%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Pwn</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/wuyi000925.github.io/category/Bin//" class="article-tag-list-link color4">Bin</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/wuyi000925.github.io/2021/04/12/%E5%BC%82%E6%9E%84pwn%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Use-After-Free" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -836,11 +1025,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -899,181 +1088,9 @@
 
 
   
-    <article id="post-establish-private-cloud" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/wuyi000925.github.io/2020/05/11/establish-private-cloud/">establish private cloud</a>
-    </h1>
-  
-
-        
-        <a href="/wuyi000925.github.io/2020/05/11/establish-private-cloud/" class="archive-article-date">
-  	<time datetime="2020-05-11T12:15:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-11</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="搭建私有云"><a href="#搭建私有云" class="headerlink" title="搭建私有云"></a>搭建私有云</h1><p>白嫖了阿里云的ECS后只是部署了几个网站，感觉有点大材小用，那40G的高效云盘虽说不大，但总想用用。何况百度云那么慢（可以理解），通过可道云自己搭个网盘玩玩。</p>
-<h2 id="安装环境"><a href="#安装环境" class="headerlink" title="安装环境"></a>安装环境</h2><p> Apache2.4.7  php7.0 </p>
-        
-          <a class="article-more-a" href="/wuyi000925.github.io/2020/05/11/establish-private-cloud/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/wuyi000925.github.io/2020/05/11/establish-private-cloud/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-python字节码逆向" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/wuyi000925.github.io/2020/04/26/python%E5%AD%97%E8%8A%82%E7%A0%81%E9%80%86%E5%90%91/">python字节码逆向</a>
-    </h1>
-  
-
-        
-        <a href="/wuyi000925.github.io/2020/04/26/python%E5%AD%97%E8%8A%82%E7%A0%81%E9%80%86%E5%90%91/" class="archive-article-date">
-  	<time datetime="2020-04-26T09:37:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-26</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="校历第9周作业"><a href="#校历第9周作业" class="headerlink" title="校历第9周作业"></a>校历第9周作业</h1><h2 id="disasm"><a href="#disasm" class="headerlink" title="disasm"></a>disasm</h2><p>拿到的是一段字节码</p>
-        
-          <a class="article-more-a" href="/wuyi000925.github.io/2020/04/26/python%E5%AD%97%E8%8A%82%E7%A0%81%E9%80%86%E5%90%91/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Reverse</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Bin//" class="article-tag-list-link color4">Bin</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/wuyi000925.github.io/2020/04/26/python%E5%AD%97%E8%8A%82%E7%A0%81%E9%80%86%E5%90%91/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/wuyi000925.github.io/page/2/">2</a><a class="extend next" rel="next" href="/wuyi000925.github.io/page/2/">Next &amp;raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/wuyi000925.github.io/page/2/">2</a><a class="page-number" href="/wuyi000925.github.io/page/3/">3</a><a class="extend next" rel="next" href="/wuyi000925.github.io/page/2/">Next &amp;raquo;</a>
     </nav>
   
 
@@ -1170,19 +1187,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Tech</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Web</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Bin</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Pwn</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Tech</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Web</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1214,15 +1231,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Server</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Reverse</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Misc</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Server</a>
               </li>
             
             <div class="clearfix"></div>
