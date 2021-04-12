@@ -15,16 +15,16 @@
 <meta property="og:site_name" content="Brvc3&#39;s base">
 <meta property="og:description" content="Arm Pwn 初体验Example 2018上海大学生网络安全赛  baby_arm checksec 123456[*] &#39;&#x2F;home&#x2F;tty18pwn&#x2F;Desktop&#x2F;baby_arm&#x2F;pwn&#39;    Arch:     aarch64-64-little    RELRO:    Partial RELRO    Stack:    No canary found    NX:">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://twzx.gitee.io/aarch64_start/Aarch64Registers.png">
-<meta property="og:image" content="http://twzx.gitee.io/aarch64_start/mprotect.png">
-<meta property="og:image" content="http://twzx.gitee.io/aarch64_start/gagdets.png">
+<meta property="og:image" content="http://twzx.gitee.io/WuYi000925.github.io/aarch64_start/Aarch64Registers.png">
+<meta property="og:image" content="http://twzx.gitee.io/WuYi000925.github.io/aarch64_start/mprotect.png">
+<meta property="og:image" content="http://twzx.gitee.io/WuYi000925.github.io/aarch64_start/gagdets.png">
 <meta property="article:published_time" content="2021-04-12T09:59:43.000Z">
-<meta property="article:modified_time" content="2021-04-12T10:10:57.297Z">
+<meta property="article:modified_time" content="2021-04-12T10:14:22.260Z">
 <meta property="article:author" content="Wu">
 <meta property="article:tag" content="Bin">
 <meta property="article:tag" content="Pwn">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://twzx.gitee.io/aarch64_start/Aarch64Registers.png">
+<meta name="twitter:image" content="http://twzx.gitee.io/WuYi000925.github.io/aarch64_start/Aarch64Registers.png">
   
     <link rel="alternative" href="/atom.xml" title="Brvc3&#39;s base" type="application/atom+xml">
   
@@ -191,13 +191,13 @@
 <p>开启了NX</p>
 <a id="more"></a>
 
-<h2 id="Aarch64-Registers"><a href="#Aarch64-Registers" class="headerlink" title="Aarch64 Registers"></a>Aarch64 Registers</h2><p><img src="/aarch64_start/Aarch64Registers.png" alt="Aarch64Registers"></p>
+<h2 id="Aarch64-Registers"><a href="#Aarch64-Registers" class="headerlink" title="Aarch64 Registers"></a>Aarch64 Registers</h2><p><img src="/WuYi000925.github.io/aarch64_start/Aarch64Registers.png" alt="Aarch64Registers"></p>
 <h2 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis"></a>Analysis</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__int64 <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  init();</span><br><span class="line">  <span class="built_in">write</span>(<span class="number">1L</span>L, <span class="string">"Name:"</span>, <span class="number">5L</span>L);</span><br><span class="line">  <span class="built_in">read</span>(<span class="number">0L</span>L, &amp;bss_var, <span class="number">0x200</span>LL);</span><br><span class="line">  vuln();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0L</span>L;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">ssize_t</span> <span class="title">vuln</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  __int64 v1; <span class="comment">// [xsp+10h] [xbp+10h]</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">read</span>(<span class="number">0</span>, &amp;v1, <span class="number">0x200</span>uLL);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>很明显的栈溢出，但是由于没有现成的后门，而且开启了NX，所以需要绕过</p>
-<p>所幸程序<img src="/aarch64_start/mprotect.png" alt="mprotect">提供了.mprotect,  该函数把以start地址开始的、长度为len的内存区的保护属性修改为prot指定的值 。bss段本来是不可执行的，我们可以改成可执行。IDA中看到bss_var地址为0x0411068，从这开始改就行</p>
+<p>所幸程序<img src="/WuYi000925.github.io/aarch64_start/mprotect.png" alt="mprotect">提供了.mprotect,  该函数把以start地址开始的、长度为len的内存区的保护属性修改为prot指定的值 。bss段本来是不可执行的，我们可以改成可执行。IDA中看到bss_var地址为0x0411068，从这开始改就行</p>
 <p>利用思路：</p>
 <ol>
 <li>将shellcode写入bss段</li>
@@ -205,7 +205,7 @@
 <li>rop调转到之前bss变量的地址去执行shellcode </li>
 </ol>
 <p>由于用寄存器传参，x86-64中需要寻找pop rdi; ret这种gadgets来劫持参数。arm中同样， X0~X7寄存器用于传递子程序参数，多余参数才采用堆栈传递 。可以通过<code>ROPgadget --binary pwn --only &quot;ldp|ret&quot;</code>来寻找gadgets。</p>
-<p><img src="/aarch64_start/gagdets.png" alt="gagdets"></p>
+<p><img src="/WuYi000925.github.io/aarch64_start/gagdets.png" alt="gagdets"></p>
 <blockquote>
 <p>下列函数都有gadgets可用</p>
 <ol>
@@ -475,19 +475,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">script</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">matlab</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">math</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">script</a>
               </li>
              
               <li class="article-tag-list-item">
