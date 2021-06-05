@@ -6,16 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://twzx.gitee.io/wuyi000925.github.io">
-  <title>Tag: Tech | Brvc3&#39;s base</title>
+  <title>UAF_Patch | Brvc3&#39;s base</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="A blog recording my study path.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Brvc3&#39;s base">
-<meta property="og:url" content="http://twzx.gitee.io/wuyi000925.github.io/tag/Tech/index.html">
+  <meta name="description" content="UAF patch测试用例123456789101112131415161718192021222324#include&lt;stdlib.h&gt;#include&lt;stdio.h&gt;int main()&amp;#123;	int *ptr[10],idx;	puts(&quot;Index:&quot;);	scanf(&quot;%1d&quot;,&amp;idx);	printf(&quot;idx is %d\n&quot;,idx);">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UAF_Patch">
+<meta property="og:url" content="http://twzx.gitee.io/wuyi000925.github.io/2021/06/05/UAF-Patch/index.html">
 <meta property="og:site_name" content="Brvc3&#39;s base">
-<meta property="og:description" content="A blog recording my study path.">
+<meta property="og:description" content="UAF patch测试用例123456789101112131415161718192021222324#include&lt;stdlib.h&gt;#include&lt;stdio.h&gt;int main()&amp;#123;	int *ptr[10],idx;	puts(&quot;Index:&quot;);	scanf(&quot;%1d&quot;,&amp;idx);	printf(&quot;idx is %d\n&quot;,idx);">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-06-05T12:56:02.000Z">
+<meta property="article:modified_time" content="2021-06-05T12:57:31.232Z">
 <meta property="article:author" content="Wu">
+<meta property="article:tag" content="Bin">
+<meta property="article:tag" content="Pwn">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="Brvc3&#39;s base" type="application/atom+xml">
@@ -156,60 +160,67 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-UAF-Patch" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      UAF_Patch
+    </h1>
+  
+
+        
+        <a href="/wuyi000925.github.io/2021/06/05/UAF-Patch/" class="archive-article-date">
+  	<time datetime="2021-06-05T12:56:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-05</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="UAF-patch"><a href="#UAF-patch" class="headerlink" title="UAF patch"></a>UAF patch</h1><h2 id="测试用例"><a href="#测试用例" class="headerlink" title="测试用例"></a>测试用例</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> *ptr[<span class="number">10</span>],idx;</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"Index:"</span>);</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">"%1d"</span>,&amp;idx);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"idx is %d\n"</span>,idx);</span><br><span class="line">	ptr[idx] = <span class="built_in">malloc</span>(<span class="number">0x80</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"ptr[%d] is %p\n"</span>,idx,ptr[idx]);</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"Now free"</span>);</span><br><span class="line">	<span class="built_in">free</span>(ptr[idx]);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"ptr[%d] is %p\n"</span>,idx,ptr[idx]);</span><br><span class="line">	<span class="keyword">if</span>(ptr[idx] != <span class="number">0x0</span>)</span><br><span class="line">	&#123;	</span><br><span class="line">		<span class="built_in">puts</span>(<span class="string">"uaf exist!"</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;	</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"uaf fixed!"</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//gcc uaf.c  -o uaf</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="patch"><a href="#patch" class="headerlink" title="patch"></a>patch</h2><p>找到free的地方</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.text:0000000000400762                 mov     eax, [rbp+var_74]</span><br><span class="line">.text:0000000000400765                 cdqe</span><br><span class="line">.text:0000000000400767                 mov     rax, [rbp+rax*8+ptr]</span><br><span class="line">.text:000000000040076C                 mov     rdi, rax        ; ptr</span><br><span class="line">.text:000000000040076F                 call    _free</span><br></pre></td></tr></table></figure>
+
+<p>可以看到free的参数是[rbp+rax*8+ptr]</p>
+<p>ptr在main函数开头可以看见</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.text:00000000004006D6 var_74          &#x3D; dword ptr -74h</span><br><span class="line">.text:00000000004006D6 ptr             &#x3D; qword ptr -70h</span><br><span class="line">.text:00000000004006D6 var_18          &#x3D; qword ptr -18h</span><br></pre></td></tr></table></figure>
+
+<p>在eh_frame段找一个地方写上我们的汇编代码，我这里找的是0x400900</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">call 0x400560;这里的地址是_free的地址，这里有大坑</span><br><span class="line">mov eax,[rbp-0x74];[rbp-0x74]对应[rbp+var_74]</span><br><span class="line">cdqe;</span><br><span class="line">lea rdx,ds:0[rax*8];</span><br><span class="line">lea rax,[rbp-0x70];[rbp-0x70]对应rbp</span><br><span class="line">mov r8,0;</span><br><span class="line">mov [rbp+rax],r8;</span><br><span class="line">jmp 0x00400774;跳转回去</span><br></pre></td></tr></table></figure>
+
+<p>然后把原函数cal _free的地方改成jmp 0x400900即可</p>
+<h2 id="大坑"><a href="#大坑" class="headerlink" title="大坑"></a>大坑</h2><p>IDA告诉你它patch完了，但是它其实patch歪了</p>
+<p>比如这里，call 0x400560的机器码是E8 5B FC FF FF</p>
+<p>但是它给你patch成了 E8 5B FC BF 8C</p>
+<p>所以你得用010 editor手动改一下机器码</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/wuyi000925.github.io/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/05/18/bs64-encode-decode/" class="archive-article-date">
-  	<time datetime="2020-05-18T06:37:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-18</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/05/18/bs64-encode-decode/">bs64 encode&amp;decode</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Reverse</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Misc</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Pwn</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 	<div class="article-category tagcloud">
 		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
@@ -222,408 +233,104 @@
 	</div>
 
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://twzx.gitee.io/wuyi000925.github.io/2021/06/05/UAF-Patch/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/04/26/python%E5%AD%97%E8%8A%82%E7%A0%81%E9%80%86%E5%90%91/" class="archive-article-date">
-  	<time datetime="2020-04-26T09:37:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-26</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/wuyi000925.github.io/2021/05/03/%E6%B2%99%E7%AE%B1%E7%BB%95%E8%BF%87/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">沙箱绕过</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/04/26/python%E5%AD%97%E8%8A%82%E7%A0%81%E9%80%86%E5%90%91/">python字节码逆向</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Reverse</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Bin//" class="article-tag-list-link color4">Bin</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/04/26/%E6%A0%A1%E5%8E%86%E7%AC%AC8%E5%91%A8%E4%BD%9C%E4%B8%9A/" class="archive-article-date">
-  	<time datetime="2020-04-26T09:35:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-26</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/04/26/%E6%A0%A1%E5%8E%86%E7%AC%AC8%E5%91%A8%E4%BD%9C%E4%B8%9A/">校历第8周作业</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Reverse</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Bin//" class="article-tag-list-link color4">Bin</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/11/%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%87%BA%E9%A2%98/" class="archive-article-date">
-  	<time datetime="2020-03-11T12:51:07.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/11/%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%87%BA%E9%A2%98/">第一次出题</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Reverse</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Bin//" class="article-tag-list-link color4">Bin</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/10/WP-of-homework-in-Winter-Holiday/" class="archive-article-date">
-  	<time datetime="2020-03-10T12:27:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/10/WP-of-homework-in-Winter-Holiday/">WP of homework in Winter Holiday</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">WP</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Bin//" class="article-tag-list-link color4">Bin</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/10/%E5%9C%A880%E7%AB%AF%E5%8F%A3%E9%83%A8%E7%BD%B2%E5%A4%9A%E4%B8%AA%E7%BD%91%E7%AB%99/" class="archive-article-date">
-  	<time datetime="2020-03-10T12:24:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/10/%E5%9C%A880%E7%AB%AF%E5%8F%A3%E9%83%A8%E7%BD%B2%E5%A4%9A%E4%B8%AA%E7%BD%91%E7%AB%99/">在80端口部署多个网站</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Server</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Web//" class="article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/09/%E5%9C%A8%E8%BD%AC%E6%88%98hexo-gitee%E6%97%B6%E8%B8%A9%E7%9A%84%E9%9B%B7/" class="archive-article-date">
-  	<time datetime="2020-03-09T14:06:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/09/%E5%9C%A8%E8%BD%AC%E6%88%98hexo-gitee%E6%97%B6%E8%B8%A9%E7%9A%84%E9%9B%B7/">在转战hexo+gitee时踩的雷</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Web//" class="article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/wuyi000925.github.io/2020/03/09/Establish-a-Website-for-the-first-time/" class="archive-article-date">
-  	<time datetime="2020-03-09T13:27:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/wuyi000925.github.io/2020/03/09/Establish-a-Website-for-the-first-time/">Establish a Website for the first time</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Tech</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/wuyi000925.github.io/category/Web//" class="article-tag-list-link color4">Web</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -648,9 +355,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

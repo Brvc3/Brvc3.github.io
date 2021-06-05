@@ -158,6 +158,111 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-UAF-Patch" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/wuyi000925.github.io/2021/06/05/UAF-Patch/">UAF_Patch</a>
+    </h1>
+  
+
+        
+        <a href="/wuyi000925.github.io/2021/06/05/UAF-Patch/" class="archive-article-date">
+  	<time datetime="2021-06-05T12:56:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-05</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="UAF-patch"><a href="#UAF-patch" class="headerlink" title="UAF patch"></a>UAF patch</h1><h2 id="测试用例"><a href="#测试用例" class="headerlink" title="测试用例"></a>测试用例</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> *ptr[<span class="number">10</span>],idx;</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"Index:"</span>);</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">"%1d"</span>,&amp;idx);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"idx is %d\n"</span>,idx);</span><br><span class="line">	ptr[idx] = <span class="built_in">malloc</span>(<span class="number">0x80</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"ptr[%d] is %p\n"</span>,idx,ptr[idx]);</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"Now free"</span>);</span><br><span class="line">	<span class="built_in">free</span>(ptr[idx]);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"ptr[%d] is %p\n"</span>,idx,ptr[idx]);</span><br><span class="line">	<span class="keyword">if</span>(ptr[idx] != <span class="number">0x0</span>)</span><br><span class="line">	&#123;	</span><br><span class="line">		<span class="built_in">puts</span>(<span class="string">"uaf exist!"</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;	</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">"uaf fixed!"</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//gcc uaf.c  -o uaf</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="patch"><a href="#patch" class="headerlink" title="patch"></a>patch</h2><p>找到free的地方</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.text:0000000000400762                 mov     eax, [rbp+var_74]</span><br><span class="line">.text:0000000000400765                 cdqe</span><br><span class="line">.text:0000000000400767                 mov     rax, [rbp+rax*8+ptr]</span><br><span class="line">.text:000000000040076C                 mov     rdi, rax        ; ptr</span><br><span class="line">.text:000000000040076F                 call    _free</span><br></pre></td></tr></table></figure>
+
+<p>可以看到free的参数是[rbp+rax*8+ptr]</p>
+<p>ptr在main函数开头可以看见</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.text:00000000004006D6 var_74          &#x3D; dword ptr -74h</span><br><span class="line">.text:00000000004006D6 ptr             &#x3D; qword ptr -70h</span><br><span class="line">.text:00000000004006D6 var_18          &#x3D; qword ptr -18h</span><br></pre></td></tr></table></figure>
+
+<p>在eh_frame段找一个地方写上我们的汇编代码，我这里找的是0x400900</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">call 0x400560;这里的地址是_free的地址，这里有大坑</span><br><span class="line">mov eax,[rbp-0x74];[rbp-0x74]对应[rbp+var_74]</span><br><span class="line">cdqe;</span><br><span class="line">lea rdx,ds:0[rax*8];</span><br><span class="line">lea rax,[rbp-0x70];[rbp-0x70]对应rbp</span><br><span class="line">mov r8,0;</span><br><span class="line">mov [rbp+rax],r8;</span><br><span class="line">jmp 0x00400774;跳转回去</span><br></pre></td></tr></table></figure>
+
+<p>然后把原函数cal _free的地方改成jmp 0x400900即可</p>
+<h2 id="大坑"><a href="#大坑" class="headerlink" title="大坑"></a>大坑</h2><p>IDA告诉你它patch完了，但是它其实patch歪了</p>
+<p>比如这里，call 0x400560的机器码是E8 5B FC FF FF</p>
+<p>但是它给你patch成了 E8 5B FC BF 8C</p>
+<p>所以你得用010 editor手动改一下机器码</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Pwn</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/wuyi000925.github.io/category/Bin//" class="article-tag-list-link color4">Bin</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/wuyi000925.github.io/2021/06/05/UAF-Patch/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-沙箱绕过" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1010,76 +1115,6 @@
 
 
   
-    <article id="post-汇编0x01“" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/wuyi000925.github.io/2020/05/29/%E6%B1%87%E7%BC%960x01%E2%80%9C/">汇编0x01</a>
-    </h1>
-  
-
-        
-        <a href="/wuyi000925.github.io/2020/05/29/%E6%B1%87%E7%BC%960x01%E2%80%9C/" class="archive-article-date">
-  	<time datetime="2020-05-29T12:41:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="汇编-0x01"><a href="#汇编-0x01" class="headerlink" title="汇编 0x01"></a>汇编 0x01</h1><h2 id="寻址模式"><a href="#寻址模式" class="headerlink" title="寻址模式"></a>寻址模式</h2><ol>
-<li><p>立即数寻址         eg.: mov eax,1000h    操作数在指令中</p>
-</li>
-<li><p>寄存器寻址         eg. :mov ebp,esp        操作数在指定寄存器中</p>
-</li>
-<li><p>直接内存寻址     eg.: mov ax,[2000h]    操作数在内存中</p>
-        
-          <a class="article-more-a" href="/wuyi000925.github.io/2020/05/29/%E6%B1%87%E7%BC%960x01%E2%80%9C/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/wuyi000925.github.io/2020/05/29/%E6%B1%87%E7%BC%960x01%E2%80%9C/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/wuyi000925.github.io/page/2/">2</a><a class="page-number" href="/wuyi000925.github.io/page/3/">3</a><a class="extend next" rel="next" href="/wuyi000925.github.io/page/2/">Next &amp;raquo;</a>
@@ -1195,6 +1230,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">matlab</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">math</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">vim</a>
               </li>
              
@@ -1211,6 +1254,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">WP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Reverse</a>
               </li>
              
@@ -1219,19 +1266,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">matlab</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">math</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Server</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">WP</a>
               </li>
             
             <div class="clearfix"></div>
