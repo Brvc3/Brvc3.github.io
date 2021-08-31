@@ -190,9 +190,8 @@
 <li>影响范围：2.2 &lt;= glibc &lt;=2.17</li>
 </ul>
 </blockquote>
- <img src="/2021/08/31/CVE-2015-0235/gethost.png" class="" title="图片描述"> 
+ <img src="/2021/08/31/CVE-2015-0235/gethost.png" class="" title="gethost"> 
 
-<p><img src="CVE-2015-0235/gethost.png" alt="gethost"></p>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p><code>gethostbyname()</code> 先通过<code>__nss_hostname_digits_dots()</code>判断参数是否为IP，如果是IP就直接结束；如果是域名则调用<code>__gethostbyname_r()</code>进行解析。漏洞发生在<code>__nss_hostname_digits_dots()</code>中。</p>
 <blockquote>
 <ul>
@@ -210,7 +209,8 @@
 <blockquote>
 <p>strcpy()在溢出这一块老演员了属于是</p>
 </blockquote>
-<p> <img src="CVE-2015-0235/struct.png" alt="struct"></p>
+  <img src="/2021/08/31/CVE-2015-0235/struct.png" class="" title="struct"> 
+
 <h2 id="赛题"><a href="#赛题" class="headerlink" title="赛题"></a>赛题</h2><p>巅峰极客 ghost</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[*] <span class="string">'/home/giantbranch/Desktop/ghost/pwn'</span></span><br><span class="line">    Arch:     amd64-64-little</span><br><span class="line">    RELRO:    Full RELRO</span><br><span class="line">    Stack:    Canary found</span><br><span class="line">    NX:       NX enabled</span><br><span class="line">    PIE:      PIE enabled</span><br></pre></td></tr></table></figure>
 
@@ -1261,14 +1261,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Tech</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Web</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Bin</a>
               </li>
              
@@ -1277,11 +1269,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">matlab</a>
+                <a href="javascript:void(0)" class="js-tag color5">Tech</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">math</a>
+                <a href="javascript:void(0)" class="js-tag color4">Web</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1293,6 +1285,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">matlab</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">math</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
              
@@ -1301,15 +1301,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">WP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Reverse</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Misc</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">WP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1365,15 +1365,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
         <ul class="search-ul">
           
             <li class="search-li">
-              <a href="https://tty-flag.github.io/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>TTY师傅</a>
+              <a href="https://jnsec.org/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>JNSEC</a>
             </li>
           
             <li class="search-li">
-              <a href="http://rave1sking.top/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>Rave师傅</a>
+              <a href="https://tty-flag.github.io/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>TTY</a>
             </li>
           
             <li class="search-li">
-              <a href="http://blog.yd0ng.com/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>Don师傅</a>
+              <a href="http://rave1sking.top/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>Rave</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="http://blog.yd0ng.com/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>Don</a>
+            </li>
+          
+            <li class="search-li">
+              <a href="https://1klnd.github.io/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>lll</a>
             </li>
           
         </ul>
