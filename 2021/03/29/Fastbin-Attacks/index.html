@@ -8,19 +8,21 @@
   <link rel="dns-prefetch" href="https://brvc3.github.io">
   <title>Fastbin Attacks | Brvc3&#39;s Base</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Fastbin Attacks0x01 Fastbin Double Free前提： 存在未置零的dangling pointer 能够申请并利用fastbin范围的chunk  原理：123456789101112&#x2F;*example1*&#x2F;int main(void)&amp;#123;    void *chunk1,*chunk2,*chunk3;    chunk1&#x3D;malloc(0x10);">
+  <meta name="description" content="Fastbin">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Fastbin Attacks">
 <meta property="og:url" content="https://brvc3.github.io/2021/03/29/Fastbin-Attacks/index.html">
 <meta property="og:site_name" content="Brvc3&#39;s Base">
-<meta property="og:description" content="Fastbin Attacks0x01 Fastbin Double Free前提： 存在未置零的dangling pointer 能够申请并利用fastbin范围的chunk  原理：123456789101112&#x2F;*example1*&#x2F;int main(void)&amp;#123;    void *chunk1,*chunk2,*chunk3;    chunk1&#x3D;malloc(0x10);">
+<meta property="og:description" content="Fastbin">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://brvc3.github.io/2021/03/29/Fastbin-Attacks/fastbin.png">
 <meta property="article:published_time" content="2021-03-29T06:54:15.000Z">
-<meta property="article:modified_time" content="2021-03-29T07:55:32.320Z">
+<meta property="article:modified_time" content="2021-09-02T08:15:16.922Z">
 <meta property="article:author" content="Wu">
 <meta property="article:tag" content="Bin">
 <meta property="article:tag" content="Pwn">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://brvc3.github.io/2021/03/29/Fastbin-Attacks/fastbin.png">
   
     <link rel="alternative" href="/atom.xml" title="Brvc3&#39;s Base" type="application/atom+xml">
   
@@ -68,7 +70,7 @@
 			</ul>
 		</nav>
 		<nav>
-    		35 Articles 
+    		36 Articles 
 		</nav>
 		<nav class="header-smart-menu">
     		
@@ -183,15 +185,31 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Fastbin-Attacks"><a href="#Fastbin-Attacks" class="headerlink" title="Fastbin Attacks"></a>Fastbin Attacks</h1><h2 id="0x01-Fastbin-Double-Free"><a href="#0x01-Fastbin-Double-Free" class="headerlink" title="0x01 Fastbin Double Free"></a>0x01 Fastbin Double Free</h2><h3 id="前提："><a href="#前提：" class="headerlink" title="前提："></a>前提：</h3><ol>
-<li>存在未置零的dangling pointer</li>
-<li>能够申请并利用fastbin范围的chunk</li>
-</ol>
-<h3 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*example1*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">void</span> *chunk1,*chunk2,*chunk3;</span><br><span class="line">    chunk1=<span class="built_in">malloc</span>(<span class="number">0x10</span>);</span><br><span class="line">    chunk2=<span class="built_in">malloc</span>(<span class="number">0x10</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">free</span>(chunk1);</span><br><span class="line">    <span class="built_in">free</span>(chunk2);</span><br><span class="line">    <span class="built_in">free</span>(chunk1);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h2 id="Fastbin"><a href="#Fastbin" class="headerlink" title="Fastbin"></a>Fastbin</h2>  <img src="/2021/03/29/Fastbin-Attacks/fastbin.png" class="" title="fastbin"> 
 
 <a id="more"></a>
 
-<p>如上代码可以成功编译并执行，此时fastbin中结构为 fastbin=&gt;chunk1=&gt;chunk2=&gt;chunk1`</p>
+<ul>
+<li><p>LIFO单链表结构:fd指针指向后一个堆块</p>
+</li>
+<li><p>chunk size&lt;0x80</p>
+</li>
+<li><p>堆块释放时，后一个chunk 的 pre_inuse不会置零</p>
+</li>
+<li><p>可以leak heap base</p>
+</li>
+</ul>
+<h3 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h3><ol>
+<li>存在堆溢出、use-after-free 等能控制 chunk 内容的漏洞</li>
+<li>能够申请并利用fastbin范围的chunk</li>
+</ol>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><ul>
+<li>后一个chunk的pre_inuse不置零==&gt;double free，可以控制已释放的chunk，与UAF等价</li>
+<li>通过fd链接==&gt;修改fd指针，直接申请到target addr</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*example1*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">void</span> *chunk1,*chunk2,*chunk3;</span><br><span class="line">    chunk1=<span class="built_in">malloc</span>(<span class="number">0x10</span>);</span><br><span class="line">    chunk2=<span class="built_in">malloc</span>(<span class="number">0x10</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">free</span>(chunk1);</span><br><span class="line">    <span class="built_in">free</span>(chunk2);</span><br><span class="line">    <span class="built_in">free</span>(chunk1);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上代码可以成功编译并执行，此时fastbin中结构为 fastbin=&gt;chunk1=&gt;chunk2=&gt;chunk1</p>
 <p>也就是说同一chunk可以在fastbin中多次出现，因此我们可以将先申请到chunk1，修改其data段</p>
 <p>但chunk1此时还在fastbin中，我们修改data段实际上是修改了在链表中的fd指针，因此当我们将data修改为 fake_chunk 时，fastbin中结构为<code>fastbin=&gt;chunk2=&gt;chunk1=&gt;fake_chunk</code></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*example2*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> *chunk1,*chunk2,*chunk3,*chunk4;</span><br><span class="line">	chunk1=<span class="built_in">malloc</span>(<span class="number">0x10</span>);</span><br><span class="line">	*chunk1 = <span class="number">0x10</span>;</span><br><span class="line">	chunk2=<span class="built_in">malloc</span>(<span class="number">0x10</span>);</span><br><span class="line">	*chunk2 = <span class="number">0x20</span>;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">free</span>(chunk1);</span><br><span class="line">	<span class="built_in">free</span>(chunk2);</span><br><span class="line">	<span class="built_in">free</span>(chunk1);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> fake_chunk = <span class="number">0xdeadbeef</span>;</span><br><span class="line">	chunk3=<span class="built_in">malloc</span>(<span class="number">0x10</span>);</span><br><span class="line">	*chunk3=fake_chunk;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -472,15 +490,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Crypto</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">vim</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Crypto</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -500,10 +518,6 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">WP</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Reverse</a>
               </li>
              
@@ -512,11 +526,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Server</a>
+                <a href="javascript:void(0)" class="js-tag color3">WP</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Server</a>
               </li>
              
               <li class="article-tag-list-item">
