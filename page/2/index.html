@@ -64,7 +64,7 @@
 			</ul>
 		</nav>
 		<nav>
-    		37 Articles 
+    		38 Articles 
 		</nav>
 		<nav class="header-smart-menu">
     		
@@ -160,6 +160,99 @@
           </div>
           <div id="js-content" class="content-ll">
             
+  
+    <article id="post-UAF-Patch" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/05/UAF-Patch/">UAF_Patch</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/05/UAF-Patch/" class="archive-article-date">
+  	<time datetime="2021-06-05T12:56:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-05</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        UAF patch
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Pwn</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Heap</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/category/Bin//" class="article-tag-list-link color4">Bin</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/05/UAF-Patch/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
   
     <article id="post-沙箱绕过" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -1001,99 +1094,6 @@
 
 
   
-    <article id="post-Format-String-0x01" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/08/31/Format-String-0x01/">Format String 0x01</a>
-    </h1>
-  
-
-        
-        <a href="/2020/08/31/Format-String-0x01/" class="archive-article-date">
-  	<time datetime="2020-08-31T06:53:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-31</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Format-String-0x01"><a href="#Format-String-0x01" class="headerlink" title="Format String 0x01"></a>Format String 0x01</h1><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>假设我们在编写程序时候，写成了下面的样子</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">"Color %s, Number %d, Float %4.2f\n"</span>);</span><br></pre></td></tr></table></figure>
-
-<p>此时我们可以发现我们并没有提供参数，那么程序会如何运行呢？程序照样会运行，会将栈上存储格式化字符串地址上面的三个变量分别解析为</p>
-<ol>
-<li>解析其地址对应的字符串</li>
-<li>解析其内容对应的整形值</li>
-<li>解析其内容对应的浮点值</li>
-</ol>
-<p>在Linux中编译运行后会得到如下情况：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ gcc foemat_string_test.c  -o format_string_test_ex</span><br><span class="line">foemat_string_test.c: In function ‘main’:</span><br><span class="line">foemat_string_test.c:5:9: warning: format ‘%s’ expects a matching ‘char *’ argument [-Wformat&#x3D;]</span><br><span class="line">  printf(&quot;Color %s, Number %d, Float %4.2f\n&quot;);</span><br><span class="line">         ^</span><br><span class="line">foemat_string_test.c:5:9: warning: format ‘%d’ expects a matching ‘int’ argument [-Wformat&#x3D;]</span><br><span class="line">foemat_string_test.c:5:9: warning: format ‘%f’ expects a matching ‘double’ argument [-Wformat&#x3D;]</span><br><span class="line"></span><br><span class="line">$ .&#x2F;format_string_test_ex </span><br><span class="line">Color T��, Number 251330008, Float 0.00</span><br></pre></td></tr></table></figure>
-
-<p>可以看到虽然因为没有分配参数而报了warning，但是可以编译并将栈上的内容打印了出来。</p>
-<p>对于 2，3 来说倒还无妨，但是对于对于 1 来说，如果提供了一个不可访问地址，比如 0，那么程序就会因此而崩溃。</p>
-<h2 id="利用手段"><a href="#利用手段" class="headerlink" title="利用手段"></a>利用手段</h2><ul>
-<li>使程序崩溃，因为 %s 对应的参数地址不合法的概率比较大。</li>
-<li>查看进程内容，根据 %d，%f 输出了栈上的内容。</li>
-</ul>
-<p>CTF中主要使用第二中手段打印我们想要的内容，一般会有如下几种操作</p>
-<ul>
-<li>泄露栈内存<ul>
-<li>获取某个变量的值</li>
-<li>获取某个变量对应地址的内存</li>
-</ul>
-</li>
-<li>泄露任意地址内存<ul>
-<li>利用 GOT 表得到 libc 函数地址，进而获取 libc，进而获取其它 libc 函数地址</li>
-<li>盲打，dump 整个程序，获取有用信息。</li>
-</ul>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/08/31/Format-String-0x01/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
@@ -1232,15 +1232,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Crypto</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">vim</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Crypto</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1252,7 +1252,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">WP</a>
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">script</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1264,11 +1268,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">script</a>
+                <a href="javascript:void(0)" class="js-tag color3">WP</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1276,11 +1276,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
             
             <div class="clearfix"></div>
