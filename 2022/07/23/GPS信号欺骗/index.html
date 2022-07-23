@@ -9,15 +9,15 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>GPS信号欺骗 | Brvc3&#39;s Base</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="GPS欺骗原理GPS导航系统的基本原理是测量出已知位置的卫星到用户接收机之间的距离然后综合多颗卫星的数据来确定接收机的具体位置要达到这一目的卫星的位置根据星载时钟所记录的时间在卫星星历中查出用户到卫星的距离则通过记录卫星信号传播到用户所经历的时间再将其乘以光速得到。 当GPS卫星正常工作时会不断地用1和0二进制码元组成的伪随机码发射导航电文导航电文从卫星信号中调制出来包括卫星星历、工作状况、时">
+  <meta name="description" content="GPS欺骗原理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GPS信号欺骗">
 <meta property="og:url" content="http://yoursite.com/2022/07/23/GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97/index.html">
 <meta property="og:site_name" content="Brvc3&#39;s Base">
-<meta property="og:description" content="GPS欺骗原理GPS导航系统的基本原理是测量出已知位置的卫星到用户接收机之间的距离然后综合多颗卫星的数据来确定接收机的具体位置要达到这一目的卫星的位置根据星载时钟所记录的时间在卫星星历中查出用户到卫星的距离则通过记录卫星信号传播到用户所经历的时间再将其乘以光速得到。 当GPS卫星正常工作时会不断地用1和0二进制码元组成的伪随机码发射导航电文导航电文从卫星信号中调制出来包括卫星星历、工作状况、时">
+<meta property="og:description" content="GPS欺骗原理">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-07-23T06:53:27.000Z">
-<meta property="article:modified_time" content="2022-07-23T07:15:53.061Z">
+<meta property="article:modified_time" content="2022-07-23T07:28:08.173Z">
 <meta property="article:author" content="Wu">
 <meta property="article:tag" content="Bin">
 <meta property="article:tag" content="Pwn">
@@ -185,9 +185,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <a id="more"></a>
+        <h1 id="GPS欺骗原理"><a href="#GPS欺骗原理" class="headerlink" title="GPS欺骗原理"></a>GPS欺骗原理</h1><a id="more"></a>
 
-<h1 id="GPS欺骗原理"><a href="#GPS欺骗原理" class="headerlink" title="GPS欺骗原理"></a>GPS欺骗原理</h1><p>GPS导航系统的基本原理是测量出已知位置的卫星到用户接收机之间的距离然后综合多颗卫星的数据来确定接收机的具体位置要达到这一目的卫星的位置根据星载时钟所记录的时间在卫星星历中查出用户到卫星的距离则通过记录卫星信号传播到用户所经历的时间再将其乘以光速得到。</p>
+<p>GPS导航系统的基本原理是测量出已知位置的卫星到用户接收机之间的距离然后综合多颗卫星的数据来确定接收机的具体位置要达到这一目的卫星的位置根据星载时钟所记录的时间在卫星星历中查出用户到卫星的距离则通过记录卫星信号传播到用户所经历的时间再将其乘以光速得到。</p>
 <p>当GPS卫星正常工作时会不断地用1和0二进制码元组成的伪随机码发射导航电文导航电文从卫星信号中调制出来包括卫星星历、工作状况、时钟改正、电离层时延修正、大气折射修正等信息。</p>
 <p>其中最重要的为星历数据当用户接受到导航电文时提取出卫星时间并将其与自己的时钟作对比获知卫星与用户的距离再利用导航电文中的卫星星历数据推算出卫星发射电文时所处位置从而获知用户在WGS-84大地坐标系中的位置、速度信息GPS定位的基本原理是根据高速运动的卫星瞬间位置作为已知的起算数据。采用空间距离后方交会的方法，确定待测点的位置。</p>
 <p>因此，如果我们能够用SDR模拟卫星信号，将模拟的信号通过信号发射装置发送给GPS传感器，那么就有可能实现欺骗GPS传感器获取虚假的位置信息。</p>
@@ -582,11 +582,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Web</a>
+                <a href="javascript:void(0)" class="js-tag color1">algorithms</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">algorithms</a>
+                <a href="javascript:void(0)" class="js-tag color4">Web</a>
               </li>
              
               <li class="article-tag-list-item">
