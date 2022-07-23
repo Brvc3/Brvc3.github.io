@@ -192,32 +192,43 @@
 <p>根据ettus官方的文档，我们可以通过包管理器直接安装。</p>
 <p>sudo apt-get install libuhd-dev libuhd3.15.0 uhd-host</p>
 <p>然后把USRP连接上电脑，选择我们的虚拟机，这样才能进行后续操作</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image002.jpg" alt="img"></p>
+ 
+
 <p>运行uhd_find_devices，出现报错。</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image004.jpg" alt="img"></p>
+ 
+
 <p>这是因为还没有固件镜像，运行python脚本安装镜像。</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image006.jpg" alt="img"></p>
+ 
+
 <p>然后就报了新的错</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image008.jpg" alt="img"></p>
+ 
+
 <p>这是因为虚拟机USB控制器兼容性的问题，在虚拟机设置的usb兼容性处改成3.0解决。</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image010.jpg" alt="img"></p>
+ 
+
 <p>然后再运行就可以识别出我们的设备了。</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image012.jpg" alt="img"></p>
+ 
+
 <p>测试一下：sudo uhd_fft -f 24000000，发现能够接收到2.4GHz的wifi信号，而且底部显示了设备信息。说明usrp能够正常工作。</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image002-1658559319751.jpg" alt="img"></p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image004-1658559319751.jpg" alt="img"></p>
+ 
+
+ 
+
 <h2 id="GNU-Radio安装"><a href="#GNU-Radio安装" class="headerlink" title="GNU Radio安装"></a>GNU Radio安装</h2><p>GNU Radio 是免费开源的软件开发工具套件。它提供信号运行和处理的模块，用它可以在唾手可得的低成本的外部射频（RF）硬件和通用微处理器上实现软件定义无线电、或无硬件的模拟环境。这套套件广泛用于业余爱好者，学术机构和商业机构用来研究和构建无线通信系统。</p>
 <p>GNU Radio 的应用主要是用 Python 编程语言来编写的。但是其核心信号处理模块是 C++ 在带浮点运算的微处理器上构建的。因此，开发者能够简单快速的构建一个实时、高容量的无线通信系统。</p>
 <p>首先添加软件源： sudo add-apt-repository ppa:gnuradio/gnuradio-releases</p>
 <p>更新软件源： sudo apt-get update</p>
 <p>然后安装GNUradio： sudo apt-get install gnuradio</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image006-1658559319751.jpg" alt="img"></p>
+ 
+
 <p>在终端输入gnuradio-companion，如果弹出gnuradio窗口，则安装成功</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image008-1658559319751.jpg" alt="img"></p>
+  
+
 <h1 id="Gps信号的伪造（静态）"><a href="#Gps信号的伪造（静态）" class="headerlink" title="Gps信号的伪造（静态）"></a>Gps信号的伪造（静态）</h1><p>GitHub上有一个开源项目：GPS-SDR-SIM，它生成GPS基带信号数据流，可以使用软件定义无线电（SDR）平台（如ADALM-Pluto，bladeRF，HackRF和USRP）将其转换为RF。我们通过git clone github.com/osqzss/gps-sdr-sim将项目克隆到本地。在目录内make后即可得到关键的gps-sdr-sim文件。</p>
 <p>可以在 CSV 文件（包含以地球为中心的地球固定 （ECEF） 用户位置）或 NMEA GGA 流中指定用户定义的轨迹。用户运动的采样率必须为 10Hz。用户还可以直接通过命令行分配静态位置。</p>
 <p>用户通过 GPS 广播星历文件指定 GPS 卫星星座。每日 GPS 广播星历表文件 （brdc） 是将各个站点导航文件合并为一个。每日文件的存档可以从以下位置下载： <a href="https://cddis.nasa.gov/archive/gnss/data/daily/" target="_blank" rel="noopener">https://cddis.nasa.gov/archive/gnss/data/daily/</a> </p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image002-1658559353986.jpg" alt="img"></p>
+   
+
 <p>然后，这些文件用于为视图中的GPS卫星生成模拟的伪距和多普勒。然后，该模拟范围数据用于生成GPS信号的数字化I / Q样本。</p>
 <p>如果相应的星历表集可用，则可以指定仿真开始时间。否则，将选择 RINEX 导航文件中的首次星历表时间。</p>
 <p>最大模拟持续时间由USER_MOTION_SIZE定义，以防止输出文件变得太大。通过使用“-b 1”选项将四个1位I/Q样本存储到单个字节中，可以减小输出文件大小。可以使用 bladeplayer for bladeRF 来播放压缩文件。</p>
@@ -225,32 +236,43 @@
 
 <p>其中，由于USRP使用 100 MHz的均匀积分抽取器，100MHz除以使用的采样频率必须是整数。所以这里设置参数-s 2500000。</p>
 <p>然后只要查阅目的地的经纬度高度就能仿造那个地方的GPS信号</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image002-1658559411077.jpg" alt="img"></p>
+ 
+
 <p>sudo ./gps-sdr-sim -e brdc3540.14n -l 29.286502,100.032669,4616 -s 2500000 -b 8</p>
 <p>因为gnuradio和gps-sdr-sim都更新了支持python3的特性，因此我们只要用python3运行脚本。按照github上的README，在终端中输入sudo python3 ./gps-sdr-sim-uhd.py -t gpssim.bin -s 2500000 -x 0 -b 8，即可把二进制文件通过调用GNU Radio的方式导入到USRP中发射。</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image004-1658559411077.jpg" alt="img"></p>
+  
+
 <p>并且由于采用了USRP设置，需要添加参数-b 8。</p>
 <p>在正常的情况下可以看到，程序运行过程中会输出一个一个字母U。其中每一个U代表一次传输的不稳定。如果U过多则说明采样率有问题，需要适当进行调整。</p>
-<p>美国官方的GPS L1信号频段是1575420000Hz，我们用SDR Console查看中国频段，发现确实发送出来了。</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image006.png" alt="img"></p>
+<p>美国官方的GPS L1信号频段是1575420000Hz，我们用SDR Console查看中间频段，发现确实发送出来了。</p>
+  
+
 <p>发送二进制文件后手机定位软件显示结果如下图所示。</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image008-1658559411078.jpg" alt="img"></p>
+  
+
 <p>这里虽然接收到了星图，但是并没能完成欺骗，原因是USRP射频精度为2ppm，对于高频的LTE信号频率偏移范围较大。但是在GPS等应用中，用户需要执行录制和回放。在此情况下，可以使用外部高稳定性时钟源（如恒温器控制的晶体振荡器(OCXO)）连接至NI USRP设备前面的参考输入(Ref In)端口，并在驱动程序中指定该时钟源。使用-c external可以指定使用外部时钟源，但是由于本次课程设计时间紧张，未能够尝试使用外部时钟源。</p>
 <p>换成Pluto进行尝试，由于发射频率误差: ±25ppm，也达不到我们的需求，所以能看到发射了信号，但是并没能完成欺骗。</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image002-1658559439196.jpg" alt="img"></p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image004.png" alt="img"></p>
+  
+
+  
+
 <h1 id="Gps信号的伪造（动态）"><a href="#Gps信号的伪造（动态）" class="headerlink" title="Gps信号的伪造（动态）"></a>Gps信号的伪造（动态）</h1><p>使用GoogleEarth生成轨迹，并导出为kml格式数据包，接着将kml格式数据导入SatGEN，生成MNEA格式文件。 实现动态GPS信号伪造。</p>
 <p>打开Google Earth，在project处新建一个project。</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image006-1658559439196.jpg" alt="img"></p>
+  
+
 <p>直接存到本机</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image002-1658559450069.jpg" alt="img"></p>
+  
+
 <p>选择绘制线或图形</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image004-1658559450069.jpg" alt="img"></p>
+  
+
 <p>然后导出KML文件</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image006-1658559450069.jpg" alt="img"></p>
+  
+
 <p>“SatGen软件允许您基于用户生成的轨迹文件创建GNSS RF I&amp;Q或IF数据文件，该文件可以在LabSat GNSS模拟器上重放。这使您可以在世界任何地方的设定时间和日期模拟几乎任何类型的测试。”</p>
 <p>将KML文件导入SatGen，生成NMEA文件</p>
-<p><img src="GPS%E4%BF%A1%E5%8F%B7%E6%AC%BA%E9%AA%97.assets/clip_image008-1658559450069.jpg" alt="img"></p>
+  
+
 <p>然后把NMEA文件复制到gps-sdr-sim文件夹，运行以下指令</p>
 <p>./gps-sdr-sim -e brdc3540.14n -g KMLoutput.txt -s 2500000 -b 8 -o dynamic</p>
 <p>我们就得到了名为dynamic的二进制文件（防止文件名冲突导致覆盖）</p>
@@ -1298,11 +1320,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">algorithms</a>
+                <a href="javascript:void(0)" class="js-tag color4">Web</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Web</a>
+                <a href="javascript:void(0)" class="js-tag color1">algorithms</a>
               </li>
              
               <li class="article-tag-list-item">
