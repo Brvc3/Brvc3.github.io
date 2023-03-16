@@ -7,28 +7,25 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>SCTF2021 WP | Brvc3&#39;s Base</title>
+  <title>[CVE-2019-11834]SCTF2021WP | Brvc3&#39;s Base</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="SCTF2021 dataleak Keyword： cJSON, CVE-2019-11834">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SCTF2021 WP">
+<meta property="og:title" content="[CVE-2019-11834]SCTF2021WP">
 <meta property="og:url" content="http://yoursite.com/2022/01/30/SCTF2021_WP/index.html">
 <meta property="og:site_name" content="Brvc3&#39;s Base">
 <meta property="og:description" content="SCTF2021 dataleak Keyword： cJSON, CVE-2019-11834">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://img1.imgtp.com/2022/01/14/cylGXlwT.png">
-<meta property="og:image" content="https://img1.imgtp.com/2022/01/14/bvdYA5sX.png">
-<meta property="og:image" content="https://img1.imgtp.com/2022/01/14/jVJCAZgW.png">
-<meta property="og:image" content="http://yoursite.com/2022/01/30/SCTF2021_WP/C:%5CUsers%5C%E5%90%B4%E5%AE%B6%E8%BE%B0%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20220114171640915.png">
-<meta property="og:image" content="https://img1.imgtp.com/2022/01/14/ls5hPmLA.png">
+<meta property="og:image" content="http://yoursite.com/2022/01/30/SCTF2021_WP/image-20230316152336918.png">
+<meta property="og:image" content="http://yoursite.com/2022/01/30/SCTF2021_WP/image-20230316152633607.png">
+<meta property="og:image" content="http://yoursite.com/2022/01/30/SCTF2021_WP/image-20230316152658463.png">
 <meta property="article:published_time" content="2022-01-30T09:00:25.000Z">
-<meta property="article:modified_time" content="2022-04-01T07:08:34.008Z">
+<meta property="article:modified_time" content="2023-03-16T07:28:02.789Z">
 <meta property="article:author" content="Wu">
-<meta property="article:tag" content="Bin">
 <meta property="article:tag" content="Pwn">
-<meta property="article:tag" content="复现">
+<meta property="article:tag" content="CVE">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://img1.imgtp.com/2022/01/14/cylGXlwT.png">
+<meta name="twitter:image" content="http://yoursite.com/2022/01/30/SCTF2021_WP/image-20230316152336918.png">
   
     <link rel="alternative" href="/atom.xml" title="Brvc3&#39;s Base" type="application/atom+xml">
   
@@ -76,7 +73,7 @@
 			</ul>
 		</nav>
 		<nav>
-    		47 Articles 
+    		53 Articles 
 		</nav>
 		<nav class="header-smart-menu">
     		
@@ -178,7 +175,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      SCTF2021 WP
+      [CVE-2019-11834]SCTF2021WP
     </h1>
   
 
@@ -198,7 +195,7 @@
 <h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>Never trust c pointer magic and escape characters,</p>
 <p>题目分值：281</p>
 <p>解题人数：52</p>
-<h2 id="逆向分析"><a href="#逆向分析" class="headerlink" title="逆向分析"></a>逆向分析</h2><p><img src="https://img1.imgtp.com/2022/01/14/cylGXlwT.png" alt="1642147610935.png"></p>
+<h2 id="逆向分析"><a href="#逆向分析" class="headerlink" title="逆向分析"></a>逆向分析</h2><p><img src="/2022/01/30/SCTF2021_WP/image-20230316152336918.png" alt="image-20230316152336918"></p>
 <p>逻辑还是比较简单的，读取两个buf，然后调用<code>cJSON_Minity</code>对buf1进行处理，接着把buf2打印出来。明显，在远程环境下buf2后面的就是flag，我们想要把它读取出来。</p>
 <p>此时的内存如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">                +--------------------------+---+</span><br><span class="line">cJSON_Minify    |        buf1              |0|0|</span><br><span class="line">                +--------------------------+---+</span><br><span class="line">write           |        buf2              |0|0|</span><br><span class="line">                +--------------------------+---+</span><br><span class="line">                |        falg                  |</span><br><span class="line">                +------------------------------+</span><br></pre></td></tr></table></figure>
@@ -208,13 +205,11 @@
 <p> can bypass ‘\x00’，bug can be trigger with json string buffer that end with ‘\x00’ or not </p>
 </blockquote>
 <p>这里有两个0需要跳过，我们在<code>libcjson.so</code>里可以看见</p>
-<p><img src="https://img1.imgtp.com/2022/01/14/bvdYA5sX.png" alt="1642150093546.png"></p>
+<p><img src="/2022/01/30/SCTF2021_WP/image-20230316152633607.png" alt="image-20230316152633607"></p>
 <p>简单来说，凡是<code>/*??...??\x00?</code>的字符串都会被删去（只要?不为*或/或\x00）</p>
 <p>当buf1以<code>/*</code>结尾时，执行了两次<code>++arg</code>，此时<code>*arg = 0</code>，退出了while循环，然后<code>arg+=2</code>。那么我们末尾的两个0就被跳过了。它就会接着对buf2进行处理，如果对buf2故技重施，那最后buf1,buf2,flag就会结合为一个字符串。</p>
-<h2 id="动态调试"><a href="#动态调试" class="headerlink" title="动态调试"></a>动态调试</h2><p>调用<code>cJSON_Minity</code>之前的栈如下</p>
-<p><img src="https://img1.imgtp.com/2022/01/14/jVJCAZgW.png" alt="1642151726820.png"></p>
-<p>调用之后</p>
-<p><img src="/2022/01/30/SCTF2021_WP/C:%5CUsers%5C%E5%90%B4%E5%AE%B6%E8%BE%B0%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20220114171640915.png" alt="image-20220114171640915"></p>
+<h2 id="动态调试"><a href="#动态调试" class="headerlink" title="动态调试"></a>动态调试</h2><p>调用<code>cJSON_Minity</code>之后的栈如下</p>
+<p><img src="/2022/01/30/SCTF2021_WP/image-20230316152658463.png" alt="image-20230316152658463"></p>
 <p>可以看到<code>\x00</code>都被去掉了，但是flag长度是22而这里的输出用的是write()且限制了11的长度没法一次就打出来</p>
 <p>我们有两次输入buf1&amp;2的机会，设计好payload就可以达到目的。</p>
 <p>已知<code>/*</code>之后的内容（直到<code>\x00</code>）都会被删掉，我们可以通过这个来将flag分两次打出来</p>
@@ -228,7 +223,6 @@
 
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">buf1 = (<span class="string">'a'</span>    + <span class="string">'/*'</span>).ljust(<span class="number">14</span>,<span class="string">'a'</span>)</span><br><span class="line">buf2 = (<span class="string">'a'</span>*<span class="number">4</span>  + <span class="string">'/*'</span>).ljust(<span class="number">14</span>,<span class="string">'a'</span>)</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://img1.imgtp.com/2022/01/14/ls5hPmLA.png" alt="1642160583057.png"></p>
 
       
 
@@ -242,15 +236,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Bin</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Pwn</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">复现</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CVE</a>
         		</li>
       		
 		</ul>
@@ -525,15 +515,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Heap</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Crypto</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">IOT</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Heap</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -545,15 +535,19 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Server</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">algorithms</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Server</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">WP</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">CVE</a>
               </li>
             
             <div class="clearfix"></div>
