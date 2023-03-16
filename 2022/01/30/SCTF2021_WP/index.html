@@ -19,7 +19,7 @@
 <meta property="og:image" content="https://img1.imgtp.com/2022/01/14/cylGXlwT.png">
 <meta property="og:image" content="https://img1.imgtp.com/2022/01/14/bvdYA5sX.png">
 <meta property="og:image" content="https://img1.imgtp.com/2022/01/14/jVJCAZgW.png">
-<meta property="og:image" content="c:%5CUsers%5C%E5%90%B4%E5%AE%B6%E8%BE%B0%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20220114171640915.png">
+<meta property="og:image" content="http://yoursite.com/2022/01/30/SCTF2021_WP/C:%5CUsers%5C%E5%90%B4%E5%AE%B6%E8%BE%B0%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20220114171640915.png">
 <meta property="og:image" content="https://img1.imgtp.com/2022/01/14/ls5hPmLA.png">
 <meta property="article:published_time" content="2022-01-30T09:00:25.000Z">
 <meta property="article:modified_time" content="2022-04-01T07:08:34.008Z">
@@ -76,7 +76,7 @@
 			</ul>
 		</nav>
 		<nav>
-    		45 Articles 
+    		47 Articles 
 		</nav>
 		<nav class="header-smart-menu">
     		
@@ -214,7 +214,7 @@
 <h2 id="动态调试"><a href="#动态调试" class="headerlink" title="动态调试"></a>动态调试</h2><p>调用<code>cJSON_Minity</code>之前的栈如下</p>
 <p><img src="https://img1.imgtp.com/2022/01/14/jVJCAZgW.png" alt="1642151726820.png"></p>
 <p>调用之后</p>
-<p><img src="C:%5CUsers%5C%E5%90%B4%E5%AE%B6%E8%BE%B0%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20220114171640915.png" alt="image-20220114171640915"></p>
+<p><img src="/2022/01/30/SCTF2021_WP/C:%5CUsers%5C%E5%90%B4%E5%AE%B6%E8%BE%B0%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20220114171640915.png" alt="image-20220114171640915"></p>
 <p>可以看到<code>\x00</code>都被去掉了，但是flag长度是22而这里的输出用的是write()且限制了11的长度没法一次就打出来</p>
 <p>我们有两次输入buf1&amp;2的机会，设计好payload就可以达到目的。</p>
 <p>已知<code>/*</code>之后的内容（直到<code>\x00</code>）都会被删掉，我们可以通过这个来将flag分两次打出来</p>
@@ -401,7 +401,7 @@ gitment.render('gitment-ctn')
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2022 Wu
+    		&copy; 2023 Wu
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -513,19 +513,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">复现</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">Tech</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Reverse</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">复现</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Heap</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -537,11 +533,7 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Misc</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">algorithms</a>
+                <a href="javascript:void(0)" class="js-tag color5">Heap</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -549,7 +541,15 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Misc</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Server</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">algorithms</a>
               </li>
              
               <li class="article-tag-list-item">
